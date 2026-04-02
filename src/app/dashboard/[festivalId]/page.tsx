@@ -23,6 +23,8 @@ export default async function FestivalPage({ params }: { params: Promise<{ festi
     .select('user_id, display_name')
     .eq('festival_id', festivalId)
 
+  console.log('members:', JSON.stringify(members))
+
   const { data: artists } = await supabase
     .from('artists')
     .select('*')
