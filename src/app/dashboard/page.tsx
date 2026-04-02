@@ -23,7 +23,7 @@ const username = user.user_metadata?.username ?? user.email!.split('@')[0]
       <div className="flex items-center justify-between mb-8 pt-4">
         <div>
           <div className="inline-block bg-[#C8F135] px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-widest mb-1">
-            Festival Planner
+            Stageside
           </div>
           <h1 className="text-2xl font-black uppercase tracking-tight">I tuoi festival</h1>
         </div>

@@ -44,7 +44,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="inline-block bg-[#C8F135] px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
-            Festival Planner
+            Stageside
           </div>
           <h1 className="text-4xl font-black uppercase tracking-tight leading-none">
             Pianifica<br />il festival
