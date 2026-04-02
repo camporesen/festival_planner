@@ -74,7 +74,7 @@ export interface Conflict {
   overlapMinutes: number
 }
 
-export function findConflicts(artists: ArtistWithTime[], ratings: RatingData & { artist_id: string }[], config: FestivalConfig, minCategory: 'MUST SEE' | 'ALTO' | 'VALUTA' = 'ALTO'): Conflict[] {
+export function findConflicts(artists: ArtistWithTime[], ratings: any[], config: FestivalConfig, minCategory: 'MUST SEE' | 'ALTO' | 'VALUTA' = 'ALTO'): Conflict[] {
   // Solo artisti con orario e score abbastanza alto
   const relevant = artists.filter(a => {
     if (!a.start_time || !a.end_time) return false
