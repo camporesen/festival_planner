@@ -61,7 +61,7 @@ export const CATEGORY_COLORS: Record<Category, string> = {
 export interface ArtistWithTime {
   id: string
   name: string
-  day: string
+  day: string | null
   day_label: string | null
   stage: string | null
   start_time: string | null
@@ -91,7 +91,7 @@ export function findConflicts(artists: ArtistWithTime[], ratings: any[], config:
       const a1 = relevant[i]
       const a2 = relevant[j]
 
-      if (a1.day !== a2.day) continue
+      if (!a1.day || !a2.day || a1.day !== a2.day) continue
       if (a1.stage === a2.stage) continue // stesso palco = non è un conflitto
 
       const start1 = timeToMinutes(a1.start_time!)
