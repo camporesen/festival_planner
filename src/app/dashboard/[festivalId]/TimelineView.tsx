@@ -76,8 +76,6 @@ export default function TimelineView({
     return getCategory(getScore(artistId), config)
   }
 
-  // Conta MUST SEE con orario
-  const mustSeeCount = artistsWithTime.filter(a => getCat(a.id) === 'MUST SEE').length
 
   function dayLabel(day: string) {
     const a = artists.find(a => a.day === day)
@@ -89,13 +87,8 @@ export default function TimelineView({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="relative flex items-center gap-2 bg-white border border-[#E0D9CC] hover:border-[#1A1A1A] rounded-2xl px-4 py-2.5 text-sm font-bold transition"
+        className="flex items-center gap-2 bg-white border border-[#E0D9CC] hover:border-[#1A1A1A] rounded-2xl px-4 py-2.5 text-sm font-bold transition"
       >
-        {mustSeeCount > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 bg-[#C8F135] text-[#1A1A1A] text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center">
-            {mustSeeCount}
-          </span>
-        )}
         📅 Timeline
       </button>
 
