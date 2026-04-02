@@ -52,8 +52,8 @@ export function getCategory(score: number, config: FestivalConfig): Category {
 }
 
 export const CATEGORY_COLORS: Record<Category, string> = {
-  'MUST SEE': 'bg-green-100 text-green-800 border-green-300',
-  'ALTO':     'bg-blue-100 text-blue-800 border-blue-300',
-  'VALUTA':   'bg-yellow-100 text-yellow-800 border-yellow-300',
-  'SKIP':     'bg-gray-100 text-gray-500 border-gray-200',
+  'MUST SEE': 'bg-[#C8F135] text-[#1A1A1A] border-[#b8e020]',
+  'ALTO':     'bg-[#1A1A1A] text-white border-[#1A1A1A]',
+  'VALUTA':   'bg-white text-[#1A1A1A] border-[#E0D9CC]',
+  'SKIP':     'bg-[#F5F0E8] text-[#999] border-[#E0D9CC]',
 }

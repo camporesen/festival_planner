@@ -4,15 +4,12 @@ import { useRouter } from 'next/navigation'
 
 export default function LogoutButton() {
   const router = useRouter()
-  const supabase = createClient()
-
   async function logout() {
-    await supabase.auth.signOut()
+    await createClient().auth.signOut()
     router.push('/login')
   }
-
   return (
-    <button onClick={logout} className="text-sm text-gray-400 hover:text-gray-200 transition">
+    <button onClick={logout} className="text-sm text-[#666] hover:text-[#1A1A1A] transition font-medium">
       Esci
     </button>
   )

@@ -23,11 +23,10 @@ export default function ArtistList({
   const [ratings, setRatings] = useState(initialRatings)
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [showOnlyUnrated, setShowOnlyUnrated] = useState(false)
   const supabase = createClient()
-
   const config: FestivalConfig = rawConfig ?? DEFAULT_CONFIG
 
-  // Aggiorna i rating in realtime quando un altro membro vota
   useEffect(() => {
     const channel = supabase
       .channel('ratings-changes')
@@ -48,13 +47,20 @@ export default function ArtistList({
     return () => { supabase.removeChannel(channel) }
   }, [festivalId])
 
-  // Giorni unici
   const days = Array.from(new Set(artists.map(a => a.day).filter(Boolean))).sort() as string[]
+
+  const artistsForDay = selectedDay ? artists.filter(a => a.day === selectedDay) : artists
+  const ratedInDay = artistsForDay.filter(a => ratings.some(r => r.artist_id === a.id && r.user_id === userId && (r.interest || r.priority || r.curiosity))).length
+  const totalInDay = artistsForDay.length
+  const progressPct = totalInDay > 0 ? Math.round((ratedInDay / totalInDay) * 100) : 0
 
   const filteredArtists = artists.filter(a => {
     if (selectedDay && a.day !== selectedDay) return false
+    const artistRatings = ratings.filter(r => r.artist_id === a.id)
+    const myRating = artistRatings.find(r => r.user_id === userId)
+    const hasMyVote = myRating && (myRating.interest || myRating.priority || myRating.curiosity)
+    if (showOnlyUnrated && hasMyVote) return false
     if (selectedCategory) {
-      const artistRatings = ratings.filter(r => r.artist_id === a.id)
       const score = calculateScore(artistRatings, config)
       const cat = getCategory(score, config)
       if (cat !== selectedCategory) return false
@@ -69,17 +75,17 @@ export default function ArtistList({
   function dayLabel(day: string) {
     const a = artists.find(a => a.day === day)
     if (a?.day_label) return a.day_label
-    return new Date(day).toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' })
+    return new Date(day + 'T12:00:00').toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' })
   }
 
   return (
     <div>
-      {/* Filtro per giorno */}
+      {/* Filtro giorni */}
       {days.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-2 mb-3 scrollbar-hide">
           <button
             onClick={() => setSelectedDay(null)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-sm font-medium transition ${!selectedDay ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'}`}
+            className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-sm font-bold transition uppercase tracking-wide ${!selectedDay ? 'bg-[#1A1A1A] text-white' : 'bg-white text-[#666] border border-[#E0D9CC] hover:border-[#1A1A1A]'}`}
           >
             Tutti
           </button>
@@ -87,7 +93,7 @@ export default function ArtistList({
             <button
               key={day}
               onClick={() => setSelectedDay(selectedDay === day ? null : day)}
-              className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-sm font-medium transition capitalize ${selectedDay === day ? 'bg-indigo-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'}`}
+              className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-sm font-bold transition uppercase tracking-wide capitalize ${selectedDay === day ? 'bg-[#1A1A1A] text-white' : 'bg-white text-[#666] border border-[#E0D9CC] hover:border-[#1A1A1A]'}`}
             >
               {dayLabel(day)}
             </button>
@@ -95,29 +101,46 @@ export default function ArtistList({
         </div>
       )}
 
-      {/* Filtro per categoria */}
-      <div className="flex gap-2 overflow-x-auto pb-2 mb-5 scrollbar-hide">
+      {/* Barra progresso */}
+      <div className="bg-white border border-[#E0D9CC] rounded-2xl p-4 mb-4">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-bold">{ratedInDay} / {totalInDay} artisti votati</span>
+          <span className="text-sm font-black text-[#C8F135] bg-[#1A1A1A] px-2 py-0.5 rounded-lg">{progressPct}%</span>
+        </div>
+        <div className="h-2 bg-[#F5F0E8] rounded-full overflow-hidden">
+          <div
+            className="h-full bg-[#C8F135] rounded-full transition-all duration-500"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Filtri categoria + toggle non votati */}
+      <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide items-center">
         {(['MUST SEE', 'ALTO', 'VALUTA', 'SKIP'] as const).map(cat => (
           <button
             key={cat}
             onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold border transition ${selectedCategory === cat ? 'opacity-100 ring-2 ring-white/30' : 'opacity-60 hover:opacity-100'} ${CATEGORY_COLORS[cat]}`}
+            className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold border transition uppercase ${selectedCategory === cat ? `${CATEGORY_COLORS[cat]} ring-2 ring-offset-1 ring-[#1A1A1A]` : `${CATEGORY_COLORS[cat]} opacity-50 hover:opacity-100`}`}
           >
             {cat}
           </button>
         ))}
-        <AddArtistButton
-          festivalId={festivalId}
-          onAdd={artist => setArtists(prev => [...prev, artist])}
-        />
+        <button
+          onClick={() => setShowOnlyUnrated(!showOnlyUnrated)}
+          className={`flex-shrink-0 ml-auto px-3 py-1.5 rounded-xl text-xs font-bold border transition ${showOnlyUnrated ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]' : 'bg-white text-[#666] border-[#E0D9CC] hover:border-[#1A1A1A]'}`}
+        >
+          Da votare
+        </button>
+        <AddArtistButton festivalId={festivalId} onAdd={artist => setArtists(prev => [...prev, artist])} />
       </div>
 
       {/* Lista artisti */}
       <div className="space-y-2">
         {filteredArtists.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-[#999]">
             <p className="text-3xl mb-2">🎵</p>
-            <p>Nessun artista trovato.</p>
+            <p className="font-medium">Nessun artista trovato.</p>
             {artists.length === 0 && <p className="text-sm mt-1">Aggiungi il primo artista con il pulsante +</p>}
           </div>
         )}
