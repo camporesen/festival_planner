@@ -24,6 +24,7 @@ export default function ArtistList({
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [showOnlyUnrated, setShowOnlyUnrated] = useState(false)
+  const [selectedMembers, setSelectedMembers] = useState<string[]>(members.map(m => m.user_id))
   const supabase = createClient()
   const config: FestivalConfig = rawConfig ?? DEFAULT_CONFIG
 
@@ -47,28 +48,43 @@ export default function ArtistList({
     return () => { supabase.removeChannel(channel) }
   }, [festivalId])
 
+  function toggleMember(userId: string) {
+    setSelectedMembers(prev =>
+      prev.includes(userId)
+        ? prev.length === 1 ? prev : prev.filter(id => id !== userId)
+        : [...prev, userId]
+    )
+  }
+
+  // Filtra i rating solo per i membri selezionati
+  function filteredRatingsForArtist(artistId: string) {
+    return ratings.filter(r => r.artist_id === artistId && selectedMembers.includes(r.user_id))
+  }
+
   const days = Array.from(new Set(artists.map(a => a.day).filter(Boolean))).sort() as string[]
 
   const artistsForDay = selectedDay ? artists.filter(a => a.day === selectedDay) : artists
-  const ratedInDay = artistsForDay.filter(a => ratings.some(r => r.artist_id === a.id && r.user_id === userId && (r.interest || r.priority || r.curiosity))).length
+  const ratedInDay = artistsForDay.filter(a => {
+    const myR = ratings.find(r => r.artist_id === a.id && r.user_id === userId)
+    return myR && (myR.interest || myR.priority || myR.curiosity)
+  }).length
   const totalInDay = artistsForDay.length
   const progressPct = totalInDay > 0 ? Math.round((ratedInDay / totalInDay) * 100) : 0
 
   const filteredArtists = artists.filter(a => {
     if (selectedDay && a.day !== selectedDay) return false
-    const artistRatings = ratings.filter(r => r.artist_id === a.id)
-    const myRating = artistRatings.find(r => r.user_id === userId)
+    const myRating = ratings.find(r => r.artist_id === a.id && r.user_id === userId)
     const hasMyVote = myRating && (myRating.interest || myRating.priority || myRating.curiosity)
     if (showOnlyUnrated && hasMyVote) return false
     if (selectedCategory) {
-      const score = calculateScore(artistRatings, config)
+      const score = calculateScore(filteredRatingsForArtist(a.id), config)
       const cat = getCategory(score, config)
       if (cat !== selectedCategory) return false
     }
     return true
   }).sort((a, b) => {
-    const scoreA = calculateScore(ratings.filter(r => r.artist_id === a.id), config)
-    const scoreB = calculateScore(ratings.filter(r => r.artist_id === b.id), config)
+    const scoreA = calculateScore(filteredRatingsForArtist(a.id), config)
+    const scoreB = calculateScore(filteredRatingsForArtist(b.id), config)
     return scoreB - scoreA
   })
 
@@ -78,8 +94,52 @@ export default function ArtistList({
     return new Date(day + 'T12:00:00').toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' })
   }
 
+  function memberInitials(name: string) {
+    return name.split(/[\s._-]/).map(p => p[0]?.toUpperCase() ?? '').join('').slice(0, 2)
+  }
+
   return (
     <div>
+      {/* Selettore membri */}
+      {members.length > 1 && (
+        <div className="mb-4">
+          <p className="text-xs font-black uppercase tracking-widest text-[#999] mb-2">Score basato su</p>
+          <div className="flex gap-2 flex-wrap">
+            {members.map(m => {
+              const isSelected = selectedMembers.includes(m.user_id)
+              const isMe = m.user_id === userId
+              return (
+                <button
+                  key={m.user_id}
+                  onClick={() => toggleMember(m.user_id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold border transition ${
+                    isSelected
+                      ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
+                      : 'bg-white text-[#999] border-[#E0D9CC] hover:border-[#1A1A1A]'
+                  }`}
+                >
+                  <span className={`w-5 h-5 rounded-lg flex items-center justify-center text-[10px] font-black flex-shrink-0 ${
+                    isSelected ? 'bg-white/20 text-white' : 'bg-[#F5F0E8] text-[#666]'
+                  }`}>
+                    {memberInitials(m.display_name)}
+                  </span>
+                  {m.display_name}
+                  {isMe && <span className="text-[10px] opacity-60">tu</span>}
+                </button>
+              )
+            })}
+            {selectedMembers.length < members.length && (
+              <button
+                onClick={() => setSelectedMembers(members.map(m => m.user_id))}
+                className="px-3 py-1.5 rounded-xl text-xs font-bold border border-dashed border-[#E0D9CC] text-[#999] hover:border-[#1A1A1A] hover:text-[#1A1A1A] transition"
+              >
+                tutti
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Filtro giorni */}
       {days.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-2 mb-3 scrollbar-hide">
@@ -105,7 +165,7 @@ export default function ArtistList({
       <div className="bg-white border border-[#E0D9CC] rounded-2xl p-4 mb-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-bold">{ratedInDay} / {totalInDay} artisti votati</span>
-          <span className="text-sm font-black text-[#C8F135] bg-[#1A1A1A] px-2 py-0.5 rounded-lg">{progressPct}%</span>
+          <span className="text-sm font-black text-[#1A1A1A] bg-[#C8F135] px-2 py-0.5 rounded-lg">{progressPct}%</span>
         </div>
         <div className="h-2 bg-[#F5F0E8] rounded-full overflow-hidden">
           <div
@@ -139,7 +199,7 @@ export default function ArtistList({
       <div className="space-y-2">
         {filteredArtists.length === 0 && (
           <div className="text-center py-12 text-[#999]">
-            <p className="text-3xl mb-2">🎵</p>
+            <p className="text-3xl mb-2">{'🎵'}</p>
             <p className="font-medium">Nessun artista trovato.</p>
             {artists.length === 0 && <p className="text-sm mt-1">Aggiungi il primo artista con il pulsante +</p>}
           </div>
@@ -149,7 +209,7 @@ export default function ArtistList({
             key={artist.id}
             artist={artist}
             ratings={ratings.filter(r => r.artist_id === artist.id)}
-            members={members}
+            members={members.filter(m => selectedMembers.includes(m.user_id))}
             userId={userId}
             config={config}
             onRate={newRating => {

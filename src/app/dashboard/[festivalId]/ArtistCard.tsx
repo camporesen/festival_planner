@@ -124,16 +124,6 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
       )}
       {/* Info */}
       <div className="flex-1 min-w-0 flex flex-col justify-between">
-        <div className="flex gap-1 flex-wrap">
-          {spotify.genres.length > 0
-            ? spotify.genres.map(g => (
-                <span key={g} className="text-[10px] bg-[#F5F0E8] text-[#666] px-1.5 py-0.5 rounded font-medium capitalize border border-[#E0D9CC]">
-                  {g}
-                </span>
-              ))
-            : <span className="text-[10px] text-[#999]">nessun genere</span>
-          }
-        </div>
         
         <a  href={spotify.url}
           target="_blank"
