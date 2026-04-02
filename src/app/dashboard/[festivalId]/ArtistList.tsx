@@ -181,7 +181,7 @@ export default function ArtistList({
           <button
             key={cat}
             onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold border-2 transition uppercase ${selectedCategory === cat ? `${CATEGORY_COLORS[cat]} border-[#1A1A1A] scale-105` : `${CATEGORY_COLORS[cat]} opacity-50 hover:opacity-100`}`}
+            className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold border-2 transition uppercase ${selectedCategory === cat ? `${CATEGORY_COLORS[cat]} border-[#1A1A1A]` : `${CATEGORY_COLORS[cat]} border-transparent opacity-50 hover:opacity-100`}`}
           >
             {cat}
           </button>
