@@ -5,6 +5,7 @@ import { calculateScore, getCategory, CATEGORY_COLORS, DEFAULT_CONFIG, FestivalC
 import ArtistCard from './ArtistCard'
 import AddArtistButton from './AddArtistButton'
 import ConflictsButton from './ConflictsButton'
+import TimelineView from './TimelineView'
 
 type Artist = { id: string; name: string; day: string | null; day_label: string | null; event_type: string | null; stage: string | null; start_time: string | null; end_time: string | null }
 type Rating = { artist_id: string; user_id: string; interest?: number; priority?: number; curiosity?: number; already_seen?: boolean }
@@ -151,6 +152,21 @@ export default function ArtistList({
           config={config}
         />
       </div>
+
+      {/* Timeline */}
+<div className="mb-4 flex gap-2">
+  <ConflictsButton
+    artists={artists}
+    ratings={filteredRatings}
+    config={config}
+  />
+  <TimelineView
+    artists={artists}
+    ratings={ratings}
+    config={config}
+    selectedMembers={selectedMembers}
+  />
+</div>
 
       {/* Filtro giorni */}
       {days.length > 0 && (
