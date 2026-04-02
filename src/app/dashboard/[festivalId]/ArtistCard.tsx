@@ -140,7 +140,7 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
                       onClick={e => e.stopPropagation()}
                       className="bg-[#1DB954] text-white text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1 hover:bg-[#1aa34a] transition flex-shrink-0"
                     >
-                      ▶ Spotify
+                      {'▶'} Spotify
                     </a>
                   </div>
                 </div>
@@ -161,7 +161,7 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
                     onClick={e => e.stopPropagation()}
                     className="bg-[#1DB954] text-white text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1 hover:bg-[#1aa34a] transition"
                   >
-                    ▶ Spotify
+                    {'▶'} Spotify
                   </a>
                 </div>
               )}
