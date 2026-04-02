@@ -15,19 +15,30 @@ export default function NewFestivalButton({ userId, userEmail, userUsername }: {
   const router = useRouter()
   const supabase = createClient()
 
-  async function join() {
-    setLoading(true); setError('')
-    const { data: fest } = await supabase
-      .from('festivals').select('id')
-      .eq('invite_code', code.trim().toLowerCase()).single()
-    if (!fest) { setError('Codice non valido.'); setLoading(false); return }
-    await supabase.from('festival_members').upsert({
-      festival_id: fest.id, user_id: userId,
-      display_name: userUsername || userEmail.split('@')[0],
-    })
-    router.push(`/dashboard/${fest.id}`)
+async function join() {
+  setLoading(true); setError('')
+  const { data: fest } = await supabase
+    .from('festivals').select('id')
+    .eq('invite_code', code.trim().toLowerCase()).single()
+  if (!fest) { setError('Codice non valido.'); setLoading(false); return }
+  
+  const { error: memberError } = await supabase.from('festival_members').upsert({
+    festival_id: fest.id,
+    user_id: userId,
+    display_name: userUsername || userEmail.split('@')[0],
+  })
+  
+  if (memberError) {
+    setError(`Errore: ${memberError.message}`)
     setLoading(false)
+    return
   }
+  
+  router.push(`/dashboard/${fest.id}`)
+  setLoading(false)
+}
+
+  
 
   return (
     <>
