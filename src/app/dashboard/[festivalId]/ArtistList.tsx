@@ -4,8 +4,9 @@ import { createClient } from '@/lib/supabase/client'
 import { calculateScore, getCategory, CATEGORY_COLORS, DEFAULT_CONFIG, FestivalConfig } from '@/lib/score'
 import ArtistCard from './ArtistCard'
 import AddArtistButton from './AddArtistButton'
+import ConflictsButton from './ConflictsButton'
 
-type Artist = { id: string; name: string; day: string | null; day_label: string | null; event_type: string | null }
+type Artist = { id: string; name: string; day: string | null; day_label: string | null; event_type: string | null; stage: string | null; start_time: string | null; end_time: string | null }
 type Rating = { artist_id: string; user_id: string; interest?: number; priority?: number; curiosity?: number; already_seen?: boolean }
 type Member = { user_id: string; display_name: string }
 
@@ -48,18 +49,20 @@ export default function ArtistList({
     return () => { supabase.removeChannel(channel) }
   }, [festivalId])
 
-  function toggleMember(userId: string) {
+  function toggleMember(uid: string) {
     setSelectedMembers(prev =>
-      prev.includes(userId)
-        ? prev.length === 1 ? prev : prev.filter(id => id !== userId)
-        : [...prev, userId]
+      prev.includes(uid)
+        ? prev.length === 1 ? prev : prev.filter(id => id !== uid)
+        : [...prev, uid]
     )
   }
 
-  // Filtra i rating solo per i membri selezionati
   function filteredRatingsForArtist(artistId: string) {
     return ratings.filter(r => r.artist_id === artistId && selectedMembers.includes(r.user_id))
   }
+
+  // Rating filtrati per i conflitti — solo i membri selezionati
+  const filteredRatings = ratings.filter(r => selectedMembers.includes(r.user_id))
 
   const days = Array.from(new Set(artists.map(a => a.day).filter(Boolean))).sort() as string[]
 
@@ -140,6 +143,15 @@ export default function ArtistList({
         </div>
       )}
 
+      {/* Conflitti — usa i rating filtrati per i membri selezionati */}
+      <div className="mb-4">
+        <ConflictsButton
+          artists={artists}
+          ratings={filteredRatings}
+          config={config}
+        />
+      </div>
+
       {/* Filtro giorni */}
       {days.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-2 mb-3 scrollbar-hide">
@@ -175,7 +187,7 @@ export default function ArtistList({
         </div>
       </div>
 
-      {/* Filtri categoria + toggle non votati */}
+      {/* Filtri categoria + toggle */}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-hide items-center">
         {(['MUST SEE', 'ALTO', 'VALUTA', 'SKIP'] as const).map(cat => (
           <button
