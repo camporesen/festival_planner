@@ -134,7 +134,7 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
                       </p>
                     </div>
                     
-                      href={spotify.url}
+                     <a href={spotify.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={e => e.stopPropagation()}
