@@ -112,61 +112,42 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
             </div>
           )}
           {spotify && (
-            <div className="relative overflow-hidden">
-              {spotify.image && (
-                <div className="relative h-32 overflow-hidden">
-                  <img src={spotify.image} alt={spotify.name} className="w-full h-full object-cover object-top" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3 flex items-end justify-between">
-                    <div>
-                      {spotify.genres.length > 0 && (
-                        <div className="flex gap-1 flex-wrap mb-1">
-                          {spotify.genres.map(g => (
-                            <span key={g} className="text-[10px] bg-white/20 text-white px-1.5 py-0.5 rounded font-medium capitalize">
-                              {g}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      <p className="text-white text-xs">
-  <strong>{spotify.followers > 0 ? `${(spotify.followers / 1000).toFixed(0)}k` : '—'}</strong> followers
-  {spotify.popularity > 0 && <> · popolarità <strong>{spotify.popularity}</strong>/100</>}
-</p>
-                    </div>
-                    
-                     <a href={spotify.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={e => e.stopPropagation()}
-                      className="bg-[#1DB954] text-white text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1 hover:bg-[#1aa34a] transition flex-shrink-0"
-                    >
-                      {'▶'} Spotify
-                    </a>
-                  </div>
-                </div>
-              )}
-              {!spotify.image && (
-                <div className="p-3 border-b border-[#E0D9CC] flex items-center justify-between">
-                  <div className="flex gap-1 flex-wrap">
-                    {spotify.genres.map(g => (
-                      <span key={g} className="text-[10px] bg-[#F5F0E8] text-[#666] px-1.5 py-0.5 rounded font-medium capitalize border border-[#E0D9CC]">
-                        {g}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  <a  href={spotify.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={e => e.stopPropagation()}
-                    className="bg-[#1DB954] text-white text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1 hover:bg-[#1aa34a] transition"
-                  >
-                    {'▶'} Spotify
-                  </a>
-                </div>
-              )}
-            </div>
-          )}
+  <div className="border-b border-[#E0D9CC]">
+    <div className="flex gap-3 p-3">
+      {/* Immagine quadrata */}
+      {spotify.image && (
+        <img
+          src={spotify.image}
+          alt={spotify.name}
+          className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
+        />
+      )}
+      {/* Info */}
+      <div className="flex-1 min-w-0 flex flex-col justify-between">
+        <div className="flex gap-1 flex-wrap">
+          {spotify.genres.length > 0
+            ? spotify.genres.map(g => (
+                <span key={g} className="text-[10px] bg-[#F5F0E8] text-[#666] px-1.5 py-0.5 rounded font-medium capitalize border border-[#E0D9CC]">
+                  {g}
+                </span>
+              ))
+            : <span className="text-[10px] text-[#999]">nessun genere</span>
+          }
+        </div>
+        
+        <a  href={spotify.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={e => e.stopPropagation()}
+          className="inline-flex items-center gap-1.5 bg-[#1DB954] text-white text-xs font-black px-3 py-1.5 rounded-xl hover:bg-[#1aa34a] transition w-fit mt-2"
+        >
+          {'▶'} Apri su Spotify
+        </a>
+      </div>
+    </div>
+  </div>
+)}
+              
 
           <div className="p-4 space-y-4">
             {/* Voti degli altri */}
