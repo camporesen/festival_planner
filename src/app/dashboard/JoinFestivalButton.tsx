@@ -22,7 +22,9 @@ async function join() {
     .eq('invite_code', code.trim().toLowerCase()).single()
   if (!fest) { setError('Codice non valido.'); setLoading(false); return }
   
-  const { error: memberError } = await supabase.from('festival_members').upsert({
+  const { error: memberError } = await supabase
+  .from('festival_members')
+  .insert({
     festival_id: fest.id,
     user_id: userId,
     display_name: userUsername || userEmail.split('@')[0],
