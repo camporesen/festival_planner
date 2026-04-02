@@ -144,15 +144,6 @@ export default function ArtistList({
         </div>
       )}
 
-      {/* Conflitti — usa i rating filtrati per i membri selezionati */}
-      <div className="mb-4">
-        <ConflictsButton
-          artists={artists}
-          ratings={filteredRatings}
-          config={config}
-        />
-      </div>
-
       {/* Timeline */}
 <div className="mb-4 flex gap-2">
   <ConflictsButton
