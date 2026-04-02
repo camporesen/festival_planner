@@ -94,3 +94,89 @@ export default function ProgrammaButton({ artists, ratings, members, config: raw
                     <div className="inline-block bg-[#C8F135] px-3 py-0.5 rounded-full text-xs font-black uppercase tracking-widest mb-1">
                       Festival Planner
                     </div>
+                    <p className="font-black text-2xl uppercase tracking-tight leading-none">
+                      Da vedere
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-4xl font-black leading-none">{mustSeeCount}</p>
+                    <p className="text-xs text-[#666] font-bold uppercase">must see</p>
+                  </div>
+                </div>
+
+                {/* Artisti per giorno */}
+                {days.map(day => {
+                  const dayArtists = artistsForDay(day)
+                  if (dayArtists.length === 0) return null
+                  return (
+                    <div key={day} className="mb-5 last:mb-0">
+                      <p className="text-xs font-black uppercase tracking-widest text-[#666] mb-2 capitalize">
+                        {dayLabel(day)}
+                      </p>
+                      <div className="space-y-1.5">
+                        {dayArtists.map(artist => {
+                          const score = getArtistScore(artist.id)
+                          const cat = getArtistCategory(artist.id)
+                          return (
+                            <div key={artist.id} className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-[#E0D9CC]">
+                              <div className={`w-10 h-10 rounded-lg flex flex-col items-center justify-center flex-shrink-0 font-black text-sm border
+                                ${cat === 'MUST SEE' ? 'bg-[#C8F135] text-[#1A1A1A] border-[#b8e020]' : 'bg-[#1A1A1A] text-white border-[#1A1A1A]'}`}>
+                                <span className="leading-none">{score}</span>
+                                <span className="text-[8px] leading-none opacity-75 mt-0.5">{cat === 'MUST SEE' ? '★' : '↑'}</span>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-black uppercase tracking-tight text-sm truncate">{artist.name}</p>
+                                {members.length > 0 && (
+                                  <div className="flex gap-2">
+                                    {members.map(m => {
+                                      const r = ratings.find(r => r.artist_id === artist.id && r.user_id === m.user_id)
+                                      if (!r?.interest) return null
+                                      return (
+                                        <span key={m.user_id} className="text-[10px] text-[#666]">
+                                          {m.display_name}: {r.interest}
+                                        </span>
+                                      )
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )
+                })}
+
+                {/* Footer card */}
+                <div className="mt-5 pt-4 border-t border-[#E0D9CC] flex items-center justify-between">
+                  <p className="text-xs text-[#999] font-mono">festival-planner.vercel.app</p>
+                  <p className="text-xs text-[#999]">
+                    {artists.filter(a => getArtistCategory(a.id) === 'ALTO').length} alto · {mustSeeCount} must see
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer modal */}
+            <div className="p-5 border-t border-[#E0D9CC] flex gap-3">
+              <button
+                onClick={exportImage}
+                disabled={exporting}
+                className="flex-1 bg-[#C8F135] hover:bg-[#b8e020] text-[#1A1A1A] disabled:opacity-50 rounded-xl py-3 text-sm font-black uppercase tracking-wide transition flex items-center justify-center gap-2"
+              >
+                {exporting ? 'Generando...' : '📲 Scarica immagine'}
+              </button>
+              <button
+                onClick={() => setOpen(false)}
+                className="bg-white border border-[#E0D9CC] rounded-xl px-4 py-3 text-sm font-bold transition hover:border-[#1A1A1A]"
+              >
+                Chiudi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
