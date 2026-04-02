@@ -57,3 +57,70 @@ export const CATEGORY_COLORS: Record<Category, string> = {
   'VALUTA':   'bg-white text-[#1A1A1A] border-[#E0D9CC]',
   'SKIP':     'bg-[#F5F0E8] text-[#999] border-[#E0D9CC]',
 }
+
+export interface ArtistWithTime {
+  id: string
+  name: string
+  day: string
+  day_label: string | null
+  stage: string | null
+  start_time: string | null
+  end_time: string | null
+}
+
+export interface Conflict {
+  artist1: ArtistWithTime
+  artist2: ArtistWithTime
+  overlapMinutes: number
+}
+
+export function findConflicts(artists: ArtistWithTime[], ratings: RatingData & { artist_id: string }[], config: FestivalConfig, minCategory: 'MUST SEE' | 'ALTO' | 'VALUTA' = 'ALTO'): Conflict[] {
+  // Solo artisti con orario e score abbastanza alto
+  const relevant = artists.filter(a => {
+    if (!a.start_time || !a.end_time) return false
+    const artistRatings = ratings.filter((r: any) => r.artist_id === a.id)
+    const score = calculateScore(artistRatings, config)
+    const cat = getCategory(score, config)
+    return cat === 'MUST SEE' || cat === 'ALTO' || (minCategory === 'VALUTA' && cat === 'VALUTA')
+  })
+
+  const conflicts: Conflict[] = []
+
+  for (let i = 0; i < relevant.length; i++) {
+    for (let j = i + 1; j < relevant.length; j++) {
+      const a1 = relevant[i]
+      const a2 = relevant[j]
+
+      if (a1.day !== a2.day) continue
+      if (a1.stage === a2.stage) continue // stesso palco = non è un conflitto
+
+      const start1 = timeToMinutes(a1.start_time!)
+      const end1 = timeToMinutes(a1.end_time!)
+      const start2 = timeToMinutes(a2.start_time!)
+      const end2 = timeToMinutes(a2.end_time!)
+
+      // Gestisci mezzanotte (es. 23:00 - 00:30 → 23:00 - 24:30)
+      const adjustedEnd1 = end1 < start1 ? end1 + 1440 : end1
+      const adjustedEnd2 = end2 < start2 ? end2 + 1440 : end2
+
+      const overlapStart = Math.max(start1, start2)
+      const overlapEnd = Math.min(adjustedEnd1, adjustedEnd2)
+      const overlap = overlapEnd - overlapStart
+
+      if (overlap > 0) {
+        conflicts.push({ artist1: a1, artist2: a2, overlapMinutes: overlap })
+      }
+    }
+  }
+
+  return conflicts.sort((a, b) => b.overlapMinutes - a.overlapMinutes)
+}
+
+function timeToMinutes(time: string): number {
+  const [h, m] = time.split(':').map(Number)
+  return h * 60 + m
+}
+
+export function formatTime(time: string): string {
+  return time.slice(0, 5)
+}
