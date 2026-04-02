@@ -37,14 +37,14 @@ export async function GET(request: NextRequest) {
     if (!found) return NextResponse.json(null)
 
     return NextResponse.json({
-      id: found.id,
-      name: found.name,
-      image: found.images?.[1]?.url ?? found.images?.[0]?.url ?? null,
-      popularity: found.popularity,
-      genres: found.genres?.slice(0, 3) ?? [],
-      url: found.external_urls?.spotify,
-      followers: found.followers?.total,
-    })
+  id: found.id,
+  name: found.name,
+  image: found.images?.[1]?.url ?? found.images?.[0]?.url ?? null,
+  popularity: found.popularity ?? 0,
+  genres: found.genres?.slice(0, 3) ?? [],
+  url: found.external_urls?.spotify,
+  followers: found.followers?.total ?? 0,
+})
   } catch (e) {
     return NextResponse.json({ error: 'Spotify error' }, { status: 500 })
   }

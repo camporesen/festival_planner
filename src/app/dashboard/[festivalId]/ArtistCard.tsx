@@ -129,9 +129,9 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
                         </div>
                       )}
                       <p className="text-white text-xs">
-                        <strong>{(spotify.followers / 1000).toFixed(0)}k</strong> followers
-                        {' · '}popolarità <strong>{spotify.popularity}</strong>/100
-                      </p>
+  <strong>{spotify.followers > 0 ? `${(spotify.followers / 1000).toFixed(0)}k` : '—'}</strong> followers
+  {spotify.popularity > 0 && <> · popolarità <strong>{spotify.popularity}</strong>/100</>}
+</p>
                     </div>
                     
                      <a href={spotify.url}
