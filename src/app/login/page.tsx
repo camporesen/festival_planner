@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -18,8 +19,14 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
     setMessage('')
+
     if (isSignUp) {
-      const { error } = await supabase.auth.signUp({ email, password })
+      if (!username.trim()) { setError('Scegli uno username.'); setLoading(false); return }
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { username: username.trim() } }
+      })
       if (error) setError(error.message)
       else setMessage('Controlla la tua email per confermare.')
     } else {
@@ -30,13 +37,7 @@ export default function LoginPage() {
     setLoading(false)
   }
 
-  async function handleGoogle() {
-    const supabase = createClient()
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` }
-    })
-  }
+  const inputClass = "w-full bg-[#F5F0E8] border border-[#E0D9CC] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#1A1A1A]"
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-[#F5F0E8]">
@@ -55,12 +56,23 @@ export default function LoginPage() {
           <h2 className="font-bold text-lg mb-4">{isSignUp ? 'Crea account' : 'Accedi'}</h2>
 
           <form onSubmit={handleSubmit} className="space-y-3">
+            {isSignUp && (
+              <input
+                type="text"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+                required
+                className={inputClass}
+                placeholder="username (es. nicolò)"
+                maxLength={30}
+              />
+            )}
             <input
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
-              className="w-full bg-[#F5F0E8] border border-[#E0D9CC] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#1A1A1A]"
+              className={inputClass}
               placeholder="email"
             />
             <input
@@ -68,7 +80,7 @@ export default function LoginPage() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
-              className="w-full bg-[#F5F0E8] border border-[#E0D9CC] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#1A1A1A]"
+              className={inputClass}
               placeholder="password"
             />
             {error && <p className="text-red-600 text-sm">{error}</p>}
@@ -82,18 +94,9 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#E0D9CC]" />
-            </div>
-            <div className="relative flex justify-center text-xs text-[#999]">
-              <span className="bg-white px-2">oppure</span>
-            </div>
-          </div>
-
           <button
             onClick={() => { setIsSignUp(!isSignUp); setError(''); setMessage('') }}
-            className="w-full mt-3 text-sm text-[#666] hover:text-[#1A1A1A] transition"
+            className="w-full mt-4 text-sm text-[#666] hover:text-[#1A1A1A] transition"
           >
             {isSignUp ? 'Hai già un account? Accedi' : 'Non hai un account? Registrati'}
           </button>

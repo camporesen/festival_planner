@@ -3,7 +3,11 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
-export default function JoinFestivalButton({ userId, userEmail }: { userId: string, userEmail: string }) {
+export default function NewFestivalButton({ userId, userEmail, userUsername }: { 
+  userId: string
+  userEmail: string
+  userUsername: string 
+}) {
   const [open, setOpen] = useState(false)
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
@@ -19,7 +23,7 @@ export default function JoinFestivalButton({ userId, userEmail }: { userId: stri
     if (!fest) { setError('Codice non valido.'); setLoading(false); return }
     await supabase.from('festival_members').upsert({
       festival_id: fest.id, user_id: userId,
-      display_name: userEmail.split('@')[0],
+      display_name: userUsername || userEmail.split('@')[0],
     })
     router.push(`/dashboard/${fest.id}`)
     setLoading(false)

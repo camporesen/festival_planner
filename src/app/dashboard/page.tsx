@@ -10,6 +10,8 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+const username = user.user_metadata?.username ?? user.email!.split('@')[0]
+
   const { data: festivals } = await supabase
     .from('festival_members')
     .select('festival_id, display_name, festivals(id, name, location, start_date, end_date, invite_code, created_by)')
@@ -29,8 +31,8 @@ export default async function DashboardPage() {
       </div>
 
       <div className="flex gap-3 mb-6">
-        <NewFestivalButton userId={user.id} userEmail={user.email!} />
-        <JoinFestivalButton userId={user.id} userEmail={user.email!} />
+        <NewFestivalButton userId={user.id} userEmail={user.email!} userUsername={username} />
+        <JoinFestivalButton userId={user.id} userEmail={user.email!} userUsername={username} />
       </div>
 
       <div className="space-y-3">
