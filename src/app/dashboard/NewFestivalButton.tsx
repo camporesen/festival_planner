@@ -16,24 +16,46 @@ export default function NewFestivalButton({ userId, userEmail }: { userId: strin
   async function create() {
     if (!name.trim()) return
     setLoading(true)
+
     const { data: fest, error } = await supabase
       .from('festivals')
       .insert({ name, location, start_date: startDate || null, end_date: endDate || null, created_by: userId })
       .select()
       .single()
 
+    if (error) {
+      console.error('Errore creazione festival:', error.message)
+      setLoading(false)
+      return
+    }
+
     if (fest) {
-      await supabase.from('festival_members').insert({
-        festival_id: fest.id,
-        user_id: userId,
-        display_name: userEmail.split('@')[0],
-      })
-      await supabase.from('festival_config').insert({ festival_id: fest.id })
+      const { error: memberError } = await supabase
+        .from('festival_members')
+        .insert({
+          festival_id: fest.id,
+          user_id: userId,
+          display_name: userEmail.split('@')[0],
+        })
+
+      if (memberError) {
+        console.error('Errore aggiunta membro:', memberError.message)
+      }
+
+      const { error: configError } = await supabase
+        .from('festival_config')
+        .insert({ festival_id: fest.id })
+
+      if (configError) {
+        console.error('Errore config:', configError.message)
+      }
+
       router.push(`/dashboard/${fest.id}`)
     }
+
     setLoading(false)
   }
-
+  
   return (
     <>
       <button onClick={() => setOpen(true)} className="flex-1 bg-indigo-600 hover:bg-indigo-500 rounded-xl py-2 text-sm font-semibold transition">
