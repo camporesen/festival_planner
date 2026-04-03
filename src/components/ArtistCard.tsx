@@ -109,7 +109,7 @@ export default function ArtistCard({ artist, ratings, members, userId, groupId, 
   onRate: (r: Omit<Rating, 'artist_id' | 'user_id'>) => void
   plans?: Plan[]
   onPlanChange?: (artistId: string, inPlan: boolean) => void
-}) { {
+}) {
   const [open, setOpen] = useState(false)
   const [spotify, setSpotify] = useState<SpotifyData | null>(null)
   const [loadingSpotify, setLoadingSpotify] = useState(false)
@@ -195,7 +195,7 @@ async function togglePlan(e: React.MouseEvent) {
         {/* Nome */}
         <div className="flex-1 min-w-0">
           <p className="font-black uppercase tracking-tight truncate">{artist.name}</p>
-          <div className="flex items-center gap-2 mt-0.5">
+          <div className="flex items-center gap-2 mt-0.5 flex-wrap">
             {artist.day_label && <span className="text-xs text-[#999]">{artist.day_label}</span>}
             {!hasMyVote && <span className="text-xs text-[#999] italic">non votato</span>}
             {hasMyVote && (
@@ -203,7 +203,26 @@ async function togglePlan(e: React.MouseEvent) {
                 I:{myRating?.interest ?? 0} P:{myRating?.priority ?? 0} C:{myRating?.curiosity ?? 0}
               </span>
             )}
+            {membersInPlan.length > 0 && (
+              <div className="flex gap-1">
+                {membersInPlan.map(m => (
+                  <span key={m.user_id} className={`text-[10px] font-black px-1.5 py-0.5 rounded-lg ${m.user_id === userId ? 'bg-[#C8F135] text-[#1A1A1A]' : 'bg-[#1A1A1A] text-white'}`}>
+                    {m.display_name}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            onClick={togglePlan}
+            disabled={savingPlan}
+            className={`text-xs font-black px-2.5 py-1.5 rounded-xl transition ${inPlan ? 'bg-[#C8F135] text-[#1A1A1A]' : 'bg-[#F5F0E8] text-[#999] hover:bg-[#E0D9CC]'}`}
+          >
+            {savingPlan ? '...' : inPlan ? '✓ Ci vado' : '+ Piano'}
+          </button>
+          <span className="text-[#CCC] text-sm">{open ? '▲' : '▼'}</span>
         </div>
 
         <span className="text-[#CCC] text-sm">{open ? '▲' : '▼'}</span>
@@ -240,41 +259,6 @@ async function togglePlan(e: React.MouseEvent) {
       </div>
     </div>
   </div>
-  {/* Riga info artista */}
-<div className="flex-1 min-w-0">
-  <p className="font-black uppercase tracking-tight truncate">{artist.name}</p>
-  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-    {artist.day_label && <span className="text-xs text-[#999]">{artist.day_label}</span>}
-    {!hasMyVote && <span className="text-xs text-[#999] italic">non votato</span>}
-    {hasMyVote && (
-      <span className="text-xs text-[#666]">
-        I:{myRating?.interest ?? 0} P:{myRating?.priority ?? 0} C:{myRating?.curiosity ?? 0}
-      </span>
-    )}
-    {/* Chi è nel piano */}
-    {membersInPlan.length > 0 && (
-      <div className="flex gap-1">
-        {membersInPlan.map(m => (
-          <span key={m.user_id} className={`text-[10px] font-black px-1.5 py-0.5 rounded-lg ${m.user_id === userId ? 'bg-[#C8F135] text-[#1A1A1A]' : 'bg-[#1A1A1A] text-white'}`}>
-            {m.display_name}
-          </span>
-        ))}
-      </div>
-    )}
-  </div>
-</div>
-
-{/* Pulsante piano + freccia */}
-<div className="flex items-center gap-2 flex-shrink-0">
-  <button
-    onClick={togglePlan}
-    disabled={savingPlan}
-    className={`text-xs font-black px-2.5 py-1.5 rounded-xl transition ${inPlan ? 'bg-[#C8F135] text-[#1A1A1A]' : 'bg-[#F5F0E8] text-[#999] hover:bg-[#E0D9CC]'}`}
-  >
-    {savingPlan ? '...' : inPlan ? '✓ Ci vado' : '+ Piano'}
-  </button>
-  <span className="text-[#CCC] text-sm">{open ? '▲' : '▼'}</span>
-</div>
 )}
               
 
