@@ -9,6 +9,11 @@ export default async function GroupPage({ params }: { params: Promise<{ festival
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+    const { data: plans } = await supabase
+  .from('plans')
+  .select('artist_id, user_id')
+  .eq('group_id', groupId)
+
   const { data: festival } = await supabase
     .from('festivals')
     .select('*')
@@ -52,14 +57,15 @@ export default async function GroupPage({ params }: { params: Promise<{ festival
     <div className="min-h-screen max-w-3xl mx-auto p-4 pb-24">
       <GroupHeader festival={festival} group={group} userId={user.id} />
       <ArtistList
-        festivalId={festivalId}
-        groupId={groupId}
-        userId={user.id}
-        artists={artists ?? []}
-        ratings={ratings ?? []}
-        members={members ?? []}
-        config={config}
-      />
+  festivalId={festivalId}
+  groupId={groupId}
+  userId={user.id}
+  artists={artists ?? []}
+  ratings={ratings ?? []}
+  members={members ?? []}
+  config={config}
+  plans={plans ?? []}
+/>
     </div>
   )
 }

@@ -16,6 +16,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ festi
     .eq('id', festivalId)
     .single()
 
+    
   if (!festival) redirect('/festivals')
 
   // Gruppi del festival a cui appartiene l'utente

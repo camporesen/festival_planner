@@ -10,9 +10,10 @@ import TimelineView from './TimelineView'
 type Artist = { id: string; name: string; day: string | null; day_label: string | null; event_type: string | null; stage: string | null; start_time: string | null; end_time: string | null }
 type Rating = { artist_id: string; user_id: string; interest?: number; priority?: number; curiosity?: number; already_seen?: boolean }
 type Member = { user_id: string; display_name: string }
+type Plan = { artist_id: string; user_id: string }
 
 export default function ArtistList({
-  festivalId, groupId, userId, artists: initialArtists, ratings: initialRatings, members, config: rawConfig
+  festivalId, groupId, userId, artists: initialArtists, ratings: initialRatings, members, config: rawConfig, plans: initialPlans
 }: {
   festivalId: string
   groupId?: string
@@ -21,6 +22,7 @@ export default function ArtistList({
   ratings: Rating[]
   members: Member[]
   config: any
+  plans: Plan[]
 }) {
   const [artists, setArtists] = useState(initialArtists)
   const [ratings, setRatings] = useState(initialRatings)
@@ -30,6 +32,29 @@ export default function ArtistList({
   const [selectedMembers, setSelectedMembers] = useState<string[]>(members.map(m => m.user_id))
   const supabase = createClient()
   const config: FestivalConfig = rawConfig ?? DEFAULT_CONFIG
+
+  const [plans, setPlans] = useState(initialPlans)
+
+// Realtime piani
+useEffect(() => {
+  if (!groupId) return
+  const channel = supabase
+    .channel('plans-changes')
+    .on('postgres_changes', {
+      event: '*', schema: 'public', table: 'plans',
+      filter: `group_id=eq.${groupId}`
+    }, payload => {
+      if (payload.eventType === 'INSERT') {
+        setPlans(prev => [...prev, payload.new as Plan])
+      } else if (payload.eventType === 'DELETE') {
+        setPlans(prev => prev.filter(p =>
+          !(p.artist_id === (payload.old as Plan).artist_id && p.user_id === (payload.old as Plan).user_id)
+        ))
+      }
+    })
+    .subscribe()
+  return () => { supabase.removeChannel(channel) }
+}, [groupId])
 
   useEffect(() => {
     const channel = supabase
@@ -226,19 +251,29 @@ export default function ArtistList({
         )}
         {filteredArtists.map(artist => (
           <ArtistCard
-            key={artist.id}
-            artist={artist}
-            ratings={ratings.filter(r => r.artist_id === artist.id)}
-            members={members.filter(m => selectedMembers.includes(m.user_id))}
-            userId={userId}
-            config={config}
-            onRate={newRating => {
-              setRatings(prev => {
-                const filtered = prev.filter(r => !(r.artist_id === artist.id && r.user_id === userId))
-                return [...filtered, { ...newRating, artist_id: artist.id, user_id: userId }]
-              })
-            }}
-          />
+  key={artist.id}
+  artist={artist}
+  ratings={ratings.filter(r => r.artist_id === artist.id)}
+  members={members.filter(m => selectedMembers.includes(m.user_id))}
+  userId={userId}
+  groupId={groupId}
+  festivalId={festivalId}
+  config={config}
+  plans={plans}
+  onPlanChange={(artistId, inPlan) => {
+    setPlans(prev =>
+      inPlan
+        ? [...prev, { artist_id: artistId, user_id: userId }]
+        : prev.filter(p => !(p.artist_id === artistId && p.user_id === userId))
+    )
+  }}
+  onRate={newRating => {
+    setRatings(prev => {
+      const filtered = prev.filter(r => !(r.artist_id === artist.id && r.user_id === userId))
+      return [...filtered, { ...newRating, artist_id: artist.id, user_id: userId }]
+    })
+  }}
+/>
         ))}
       </div>
     </div>

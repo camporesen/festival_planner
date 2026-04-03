@@ -96,14 +96,20 @@ function TrackRow({ track }: {
   )
 }
 
-export default function ArtistCard({ artist, ratings, members, userId, config, onRate }: {
+type Plan = { artist_id: string; user_id: string }
+
+export default function ArtistCard({ artist, ratings, members, userId, groupId, festivalId, config, onRate, plans, onPlanChange }: {
   artist: { id: string; name: string; day_label?: string | null; event_type?: string | null }
   ratings: Rating[]
   members: Member[]
   userId: string
+  groupId?: string
+  festivalId?: string
   config: FestivalConfig
   onRate: (r: Omit<Rating, 'artist_id' | 'user_id'>) => void
-}) {
+  plans?: Plan[]
+  onPlanChange?: (artistId: string, inPlan: boolean) => void
+}) { {
   const [open, setOpen] = useState(false)
   const [spotify, setSpotify] = useState<SpotifyData | null>(null)
   const [loadingSpotify, setLoadingSpotify] = useState(false)
@@ -120,6 +126,36 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
   const category = getCategory(score, config)
   const hasMyVote = myRating && (myRating.interest || myRating.priority || myRating.curiosity)
   const otherRatings = ratings.filter(r => r.user_id !== userId)
+
+  const isInMyPlan = plans?.some(p => p.artist_id === artist.id && p.user_id === userId) ?? false
+const membersInPlan = members.filter(m => plans?.some(p => p.artist_id === artist.id && p.user_id === m.user_id))
+const [inPlan, setInPlan] = useState(isInMyPlan)
+const [savingPlan, setSavingPlan] = useState(false)
+
+async function togglePlan(e: React.MouseEvent) {
+  e.stopPropagation()
+  if (!groupId || !festivalId) return
+  setSavingPlan(true)
+  if (inPlan) {
+    await supabase.from('plans')
+      .delete()
+      .eq('group_id', groupId)
+      .eq('user_id', userId)
+      .eq('artist_id', artist.id)
+    setInPlan(false)
+    onPlanChange?.(artist.id, false)
+  } else {
+    await supabase.from('plans').insert({
+      group_id: groupId,
+      festival_id: festivalId,
+      user_id: userId,
+      artist_id: artist.id,
+    })
+    setInPlan(true)
+    onPlanChange?.(artist.id, true)
+  }
+  setSavingPlan(false)
+}
 
   useEffect(() => {
     if (!open || spotify || loadingSpotify) return
@@ -204,6 +240,41 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
       </div>
     </div>
   </div>
+  {/* Riga info artista */}
+<div className="flex-1 min-w-0">
+  <p className="font-black uppercase tracking-tight truncate">{artist.name}</p>
+  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+    {artist.day_label && <span className="text-xs text-[#999]">{artist.day_label}</span>}
+    {!hasMyVote && <span className="text-xs text-[#999] italic">non votato</span>}
+    {hasMyVote && (
+      <span className="text-xs text-[#666]">
+        I:{myRating?.interest ?? 0} P:{myRating?.priority ?? 0} C:{myRating?.curiosity ?? 0}
+      </span>
+    )}
+    {/* Chi è nel piano */}
+    {membersInPlan.length > 0 && (
+      <div className="flex gap-1">
+        {membersInPlan.map(m => (
+          <span key={m.user_id} className={`text-[10px] font-black px-1.5 py-0.5 rounded-lg ${m.user_id === userId ? 'bg-[#C8F135] text-[#1A1A1A]' : 'bg-[#1A1A1A] text-white'}`}>
+            {m.display_name}
+          </span>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
+{/* Pulsante piano + freccia */}
+<div className="flex items-center gap-2 flex-shrink-0">
+  <button
+    onClick={togglePlan}
+    disabled={savingPlan}
+    className={`text-xs font-black px-2.5 py-1.5 rounded-xl transition ${inPlan ? 'bg-[#C8F135] text-[#1A1A1A]' : 'bg-[#F5F0E8] text-[#999] hover:bg-[#E0D9CC]'}`}
+  >
+    {savingPlan ? '...' : inPlan ? '✓ Ci vado' : '+ Piano'}
+  </button>
+  <span className="text-[#CCC] text-sm">{open ? '▲' : '▼'}</span>
+</div>
 )}
               
 
