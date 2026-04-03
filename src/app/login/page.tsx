@@ -31,7 +31,7 @@ function LoginForm() {
         options: { data: { username: username.trim() } }
       })
       if (error) setError(error.message)
-      else setMessage('Controlla la tua email per confermare.')
+        else router.push(next)
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setError(error.message)
