@@ -178,11 +178,14 @@ useEffect(() => {
     config={config}
   />
   <TimelineView
-    artists={artists}
-    ratings={ratings}
-    config={config}
-    selectedMembers={selectedMembers}
-  />
+  artists={artists}
+  ratings={ratings}
+  config={config}
+  selectedMembers={selectedMembers}
+  plans={plans}
+  members={members}
+  userId={userId}
+/>
 </div>
 
       {/* Filtro giorni */}
