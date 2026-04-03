@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import ArtistList from '@/app/dashboard/[festivalId]/ArtistList'
-import ProgrammaButton from '@/app/dashboard/[festivalId]/ProgrammaButton'
+import ArtistList from '@/components/ArtistList'
+import ProgrammaButton from '@/components/ProgrammaButton'
 import GroupHeader from './GroupHeader'
 
 export default async function GroupPage({ params }: { params: Promise<{ festivalId: string, groupId: string }> }) {
