@@ -2,10 +2,10 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { calculateScore, getCategory, CATEGORY_COLORS, DEFAULT_CONFIG, FestivalConfig } from '@/lib/score'
-import ArtistCard from '@/components/ArtistCard'
-import AddArtistButton from '@/components/AddArtistButton'
-import ConflictsButton from '@/components/ConflictsButton'
-import TimelineView from '@/components/TimelineView'
+import ArtistCard from './ArtistCard'
+import AddArtistButton from './AddArtistButton'
+import ConflictsButton from './ConflictsButton'
+import TimelineView from './TimelineView'
 
 type Artist = { id: string; name: string; day: string | null; day_label: string | null; event_type: string | null; stage: string | null; start_time: string | null; end_time: string | null }
 type Rating = { artist_id: string; user_id: string; interest?: number; priority?: number; curiosity?: number; already_seen?: boolean }
