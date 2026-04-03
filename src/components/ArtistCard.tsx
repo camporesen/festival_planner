@@ -184,49 +184,25 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
           {spotify && (
   <div className="border-b border-[#E0D9CC]">
     <div className="flex gap-3 p-3">
-      {/* Immagine */}
       {spotify.image && (
         <img
           src={spotify.image}
           alt={spotify.name}
-          className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
+          className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
         />
       )}
-      <div className="flex-1 min-w-0 flex flex-col justify-between">
-        {/* Generi */}
-        {spotify.genres.length > 0 && (
-          <div className="flex gap-1 flex-wrap">
-            {spotify.genres.map(g => (
-              <span key={g} className="text-[10px] bg-[#F5F0E8] text-[#666] px-1.5 py-0.5 rounded font-medium capitalize border border-[#E0D9CC]">
-                {g}
-              </span>
-            ))}
-          </div>
-        )}
-        {/* Link Spotify */}
+      <div className="flex items-center">
         
-        <a href={spotify.url}
+        <a  href={spotify.url}
           target="_blank"
           rel="noopener noreferrer"
           onClick={e => e.stopPropagation()}
-          className="inline-flex items-center gap-1.5 bg-[#1DB954] text-white text-xs font-black px-3 py-1.5 rounded-xl hover:bg-[#1aa34a] transition w-fit mt-2"
+          className="inline-flex items-center gap-1.5 bg-[#1DB954] text-white text-xs font-black px-3 py-1.5 rounded-xl hover:bg-[#1aa34a] transition"
         >
           {'▶'} Apri su Spotify
         </a>
       </div>
     </div>
-
-    {/* Top Tracks */}
-    {spotify.topTracks.length > 0 && (
-      <div className="border-t border-[#E0D9CC] px-3 pb-3">
-        <p className="text-[10px] font-black uppercase tracking-widest text-[#999] py-2">Top tracks</p>
-        <div className="space-y-1.5">
-          {spotify.topTracks.map(track => (
-            <TrackRow key={track.id} track={track} />
-          ))}
-        </div>
-      </div>
-    )}
   </div>
 )}
               
