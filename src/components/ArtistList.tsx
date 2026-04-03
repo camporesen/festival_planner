@@ -12,9 +12,10 @@ type Rating = { artist_id: string; user_id: string; interest?: number; priority?
 type Member = { user_id: string; display_name: string }
 
 export default function ArtistList({
-  festivalId, userId, artists: initialArtists, ratings: initialRatings, members, config: rawConfig
+  festivalId, groupId, userId, artists: initialArtists, ratings: initialRatings, members, config: rawConfig
 }: {
   festivalId: string
+  groupId?: string
   userId: string
   artists: Artist[]
   ratings: Rating[]
