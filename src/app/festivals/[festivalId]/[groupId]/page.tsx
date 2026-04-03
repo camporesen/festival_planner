@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import ArtistList from '@/components/ArtistList'
-import ProgrammaButton from '@/components/ProgrammaButton'
 import GroupHeader from './GroupHeader'
 
 export default async function GroupPage({ params }: { params: Promise<{ festivalId: string, groupId: string }> }) {
@@ -56,12 +55,6 @@ export default async function GroupPage({ params }: { params: Promise<{ festival
         festivalId={festivalId}
         groupId={groupId}
         userId={user.id}
-        artists={artists ?? []}
-        ratings={ratings ?? []}
-        members={members ?? []}
-        config={config}
-      />
-      <ProgrammaButton
         artists={artists ?? []}
         ratings={ratings ?? []}
         members={members ?? []}
