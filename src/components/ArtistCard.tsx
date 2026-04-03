@@ -132,6 +132,16 @@ const membersInPlan = members.filter(m => plans?.some(p => p.artist_id === artis
 const [inPlan, setInPlan] = useState(isInMyPlan)
 const [savingPlan, setSavingPlan] = useState(false)
 
+useEffect(() => {
+  const r = ratings.find(r => r.user_id === userId)
+  if (r) {
+    setInterest(r.interest ?? 0)
+    setPriority(r.priority ?? 0)
+    setCuriosity(r.curiosity ?? 0)
+    setAlreadySeen(r.already_seen ?? false)
+  }
+}, [ratings, userId])
+
 async function togglePlan(e: React.MouseEvent) {
   e.stopPropagation()
   if (!groupId || !festivalId) return
