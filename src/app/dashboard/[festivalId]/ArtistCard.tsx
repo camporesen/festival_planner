@@ -64,11 +64,13 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
     setSaving(true)
     const { data: artistData } = await supabase.from('artists').select('festival_id').eq('id', artist.id).single()
     await supabase.from('ratings').upsert({
-      artist_id: artist.id, user_id: userId,
-      festival_id: artistData?.festival_id,
-      interest, priority, curiosity, already_seen: alreadySeen,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'artist_id,user_id' })
+  artist_id: artist.id,
+  user_id: userId,
+  festival_id: artistData?.festival_id,
+  group_id: groupId ?? null,
+  interest, priority, curiosity, already_seen: alreadySeen,
+  updated_at: new Date().toISOString(),
+}, { onConflict: 'artist_id,user_id,group_id' })
     onRate({ interest, priority, curiosity, already_seen: alreadySeen })
     setSaving(false)
     setOpen(false)
