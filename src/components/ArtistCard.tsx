@@ -178,8 +178,10 @@ async function togglePlan(e: React.MouseEvent) {
     onRate({ interest, priority, curiosity, already_seen: alreadySeen })
     setSaving(false)
     setOpen(false)
+    console.log('groupId:', groupId)
+  console.log('festivalId:', festivalId)
   }
-
+  
   return (
     <div className={`bg-white border rounded-2xl overflow-hidden transition ${open ? 'border-[#1A1A1A]' : hasMyVote ? 'border-[#E0D9CC]' : 'border-[#E0D9CC] border-dashed'}`}>
       <div
