@@ -1,25 +1,12 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { calculateScore, getCategory, CATEGORY_COLORS, FestivalConfig } from '@/lib/score'
 
-
 type Rating = { artist_id: string; user_id: string; interest?: number; priority?: number; curiosity?: number; already_seen?: boolean }
 type Member = { user_id: string; display_name: string }
-type SpotifyData = {
-  id: string
-  name: string
-  image: string | null
-  genres: string[]
-  url: string
-  topTracks: {
-    id: string
-    name: string
-    preview_url: string | null
-    duration_ms: number
-    album_image: string | null
-  }[]
-}
+type SpotifyData = { id: string; name: string; image: string | null; genres: string[]; url: string; topTracks: any[] }
+type Plan = { artist_id: string; user_id: string }
 
 function NumberPicker({ label, value, max, onChange }: { label: string, value: number, max: number, onChange: (v: number) => void }) {
   return (
@@ -40,64 +27,6 @@ function NumberPicker({ label, value, max, onChange }: { label: string, value: n
   )
 }
 
-function TrackRow({ track }: {
-  track: { id: string; name: string; preview_url: string | null; duration_ms: number; album_image: string | null }
-}) {
-  const [playing, setPlaying] = useState(false)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-
-  function togglePlay(e: React.MouseEvent) {
-    e.stopPropagation()
-    if (!track.preview_url) return
-
-    if (!audioRef.current) {
-      audioRef.current = new Audio(track.preview_url)
-      audioRef.current.onended = () => setPlaying(false)
-    }
-
-    if (playing) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
-      setPlaying(false)
-    } else {
-      // Ferma tutti gli altri audio
-      document.querySelectorAll('audio').forEach(a => a.pause())
-      audioRef.current.play()
-      setPlaying(true)
-    }
-  }
-
-  const minutes = Math.floor(track.duration_ms / 60000)
-  const seconds = Math.floor((track.duration_ms % 60000) / 1000)
-
-  return (
-    <div className="flex items-center gap-2">
-      {track.album_image && (
-        <img src={track.album_image} alt="" className="w-8 h-8 rounded flex-shrink-0" />
-      )}
-      <div className="flex-1 min-w-0">
-        <p className="text-xs font-semibold truncate">{track.name}</p>
-        <p className="text-[10px] text-[#999]">{minutes}:{String(seconds).padStart(2, '0')}</p>
-      </div>
-      <button
-        onClick={togglePlay}
-        className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition ${
-          track.preview_url
-            ? playing
-              ? 'bg-[#1DB954] text-white'
-              : 'bg-[#F5F0E8] text-[#666] hover:bg-[#E0D9CC]'
-            : 'bg-[#F5F0E8] text-[#CCC] cursor-not-allowed'
-        }`}
-        title={track.preview_url ? 'Ascolta preview' : 'Preview non disponibile'}
-      >
-        {playing ? '⏹' : '▶'}
-      </button>
-    </div>
-  )
-}
-
-type Plan = { artist_id: string; user_id: string }
-
 export default function ArtistCard({ artist, ratings, members, userId, groupId, festivalId, config, onRate, plans, onPlanChange }: {
   artist: { id: string; name: string; day_label?: string | null; event_type?: string | null }
   ratings: Rating[]
@@ -113,6 +42,7 @@ export default function ArtistCard({ artist, ratings, members, userId, groupId, 
   const [open, setOpen] = useState(false)
   const [spotify, setSpotify] = useState<SpotifyData | null>(null)
   const [loadingSpotify, setLoadingSpotify] = useState(false)
+  const [showVoteInfo, setShowVoteInfo] = useState(false)
   const supabase = createClient()
 
   const myRating = ratings.find(r => r.user_id === userId)
@@ -128,44 +58,19 @@ export default function ArtistCard({ artist, ratings, members, userId, groupId, 
   const otherRatings = ratings.filter(r => r.user_id !== userId)
 
   const isInMyPlan = plans?.some(p => p.artist_id === artist.id && p.user_id === userId) ?? false
-const membersInPlan = members.filter(m => plans?.some(p => p.artist_id === artist.id && p.user_id === m.user_id))
-const [inPlan, setInPlan] = useState(isInMyPlan)
-const [savingPlan, setSavingPlan] = useState(false)
+  const membersInPlan = members.filter(m => plans?.some(p => p.artist_id === artist.id && p.user_id === m.user_id))
+  const [inPlan, setInPlan] = useState(isInMyPlan)
+  const [savingPlan, setSavingPlan] = useState(false)
 
-useEffect(() => {
-  const r = ratings.find(r => r.user_id === userId)
-  if (r) {
-    setInterest(r.interest ?? 0)
-    setPriority(r.priority ?? 0)
-    setCuriosity(r.curiosity ?? 0)
-    setAlreadySeen(r.already_seen ?? false)
-  }
-}, [ratings, userId])
-
-async function togglePlan(e: React.MouseEvent) {
-  e.stopPropagation()
-  if (!groupId || !festivalId) return
-  setSavingPlan(true)
-  if (inPlan) {
-    await supabase.from('plans')
-      .delete()
-      .eq('group_id', groupId)
-      .eq('user_id', userId)
-      .eq('artist_id', artist.id)
-    setInPlan(false)
-    onPlanChange?.(artist.id, false)
-  } else {
-    await supabase.from('plans').insert({
-      group_id: groupId,
-      festival_id: festivalId,
-      user_id: userId,
-      artist_id: artist.id,
-    })
-    setInPlan(true)
-    onPlanChange?.(artist.id, true)
-  }
-  setSavingPlan(false)
-}
+  useEffect(() => {
+    const r = ratings.find(r => r.user_id === userId)
+    if (r) {
+      setInterest(r.interest ?? 0)
+      setPriority(r.priority ?? 0)
+      setCuriosity(r.curiosity ?? 0)
+      setAlreadySeen(r.already_seen ?? false)
+    }
+  }, [ratings, userId])
 
   useEffect(() => {
     if (!open || spotify || loadingSpotify) return
@@ -176,30 +81,50 @@ async function togglePlan(e: React.MouseEvent) {
       .catch(() => setLoadingSpotify(false))
   }, [open])
 
-async function saveRating() {
-  setSaving(true)
-  const { data: artistData } = await supabase.from('artists').select('festival_id').eq('id', artist.id).single()
-  
-  const payload = {
-    artist_id: artist.id,
-    user_id: userId,
-    festival_id: artistData?.festival_id,
-    group_id: groupId ?? null,
-    interest,
-    priority,
-    curiosity,
-    already_seen: alreadySeen,
-    updated_at: new Date().toISOString(),
+  async function togglePlan(e: React.MouseEvent) {
+    e.stopPropagation()
+    if (!groupId || !festivalId) return
+    setSavingPlan(true)
+    if (inPlan) {
+      await supabase.from('plans')
+        .delete()
+        .eq('group_id', groupId)
+        .eq('user_id', userId)
+        .eq('artist_id', artist.id)
+      setInPlan(false)
+      onPlanChange?.(artist.id, false)
+    } else {
+      await supabase.from('plans').insert({
+        group_id: groupId,
+        festival_id: festivalId,
+        user_id: userId,
+        artist_id: artist.id,
+      })
+      setInPlan(true)
+      onPlanChange?.(artist.id, true)
+    }
+    setSavingPlan(false)
   }
-  
-  const { data, error } = await supabase.from('ratings').upsert(payload, { onConflict: 'artist_id,user_id,group_id' })
-  
-  onRate({ interest, priority, curiosity, already_seen: alreadySeen })
-  setSaving(false)
-  setOpen(false)
-}
-  
-  
+
+  async function saveRating() {
+    setSaving(true)
+    const { data: artistData } = await supabase.from('artists').select('festival_id').eq('id', artist.id).single()
+    await supabase.from('ratings').upsert({
+      artist_id: artist.id,
+      user_id: userId,
+      festival_id: artistData?.festival_id,
+      group_id: groupId ?? null,
+      interest,
+      priority,
+      curiosity,
+      already_seen: alreadySeen,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'artist_id,user_id,group_id' })
+    onRate({ interest, priority, curiosity, already_seen: alreadySeen })
+    setSaving(false)
+    setOpen(false)
+  }
+
   return (
     <div className={`bg-white border rounded-2xl overflow-hidden transition ${open ? 'border-[#1A1A1A]' : hasMyVote ? 'border-[#E0D9CC]' : 'border-[#E0D9CC] border-dashed'}`}>
       <div
@@ -234,6 +159,8 @@ async function saveRating() {
             )}
           </div>
         </div>
+
+        {/* Piano + freccia */}
         <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={togglePlan}
@@ -244,43 +171,36 @@ async function saveRating() {
           </button>
           <span className="text-[#CCC] text-sm">{open ? '▲' : '▼'}</span>
         </div>
-
-        <span className="text-[#CCC] text-sm">{open ? '▲' : '▼'}</span>
       </div>
 
       {open && (
         <div className="border-t border-[#E0D9CC] bg-[#FDFCF9]">
-          {/* Spotify banner */}
+          {/* Spotify */}
           {loadingSpotify && (
-            <div className="h-24 bg-[#F5F0E8] animate-pulse flex items-center justify-center">
-              <span className="text-xs text-[#999]">Caricamento Spotify...</span>
+            <div className="h-16 bg-[#F5F0E8] animate-pulse flex items-center justify-center">
+              <span className="text-xs text-[#999]">Caricamento...</span>
             </div>
           )}
           {spotify && (
-  <div className="border-b border-[#E0D9CC]">
-    <div className="flex gap-3 p-3">
-      {spotify.image && (
-        <img
-          src={spotify.image}
-          alt={spotify.name}
-          className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
-        />
-      )}
-      <div className="flex items-center">
-        
-        <a  href={spotify.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={e => e.stopPropagation()}
-          className="inline-flex items-center gap-1.5 bg-[#1DB954] text-white text-xs font-black px-3 py-1.5 rounded-xl hover:bg-[#1aa34a] transition"
-        >
-          {'▶'} Apri su Spotify
-        </a>
-      </div>
-    </div>
-  </div>
-)}
-              
+            <div className="border-b border-[#E0D9CC]">
+              <div className="flex gap-3 p-3">
+                {spotify.image && (
+                  <img src={spotify.image} alt={spotify.name} className="w-16 h-16 rounded-xl object-cover flex-shrink-0" />
+                )}
+                <div className="flex items-center">
+                  
+                  <a  href={spotify.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={e => e.stopPropagation()}
+                    className="inline-flex items-center gap-1.5 bg-[#1DB954] text-white text-xs font-black px-3 py-1.5 rounded-xl hover:bg-[#1aa34a] transition"
+                  >
+                    {'▶'} Apri su Spotify
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="p-4 space-y-4">
             {/* Voti degli altri */}
@@ -303,7 +223,49 @@ async function saveRating() {
 
             {/* Il tuo voto */}
             <div className="space-y-4">
-              <p className="text-xs font-black uppercase tracking-widest text-[#999]">Il tuo voto</p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-black uppercase tracking-widest text-[#999]">Il tuo voto</p>
+                <button
+                  onClick={() => setShowVoteInfo(!showVoteInfo)}
+                  className="text-xs text-[#999] hover:text-[#1A1A1A] transition flex items-center gap-1"
+                >
+                  {showVoteInfo ? '✕ chiudi' : 'ℹ️ come funziona'}
+                </button>
+              </div>
+
+              {showVoteInfo && (
+                <div className="bg-[#F5F0E8] rounded-xl p-3 space-y-2 text-xs">
+                  <div className="flex items-start gap-2">
+                    <span>🎯</span>
+                    <div>
+                      <p className="font-black text-[#1A1A1A]">Interesse (1-10)</p>
+                      <p className="text-[#666]">Quanto ti piace l'artista in generale. È il peso maggiore nello score.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span>⚡</span>
+                    <div>
+                      <p className="font-black text-[#1A1A1A]">Priorità (1-5)</p>
+                      <p className="text-[#666]">Quanto è importante vederlo live — rarità, tour rari, momenti unici.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span>🔍</span>
+                    <div>
+                      <p className="font-black text-[#1A1A1A]">Curiosità (1-5)</p>
+                      <p className="text-[#666]">Quanto vuoi scoprirlo — artisti che non conosci bene ma vuoi esplorare.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span>👁️</span>
+                    <div>
+                      <p className="font-black text-[#1A1A1A]">Già visto live</p>
+                      <p className="text-[#666]">Se l'hai già visto, riduce leggermente il bonus "mai visto" nello score.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <NumberPicker label="Interesse (1-10)" value={interest} max={10} onChange={setInterest} />
               <NumberPicker label="Priorità (1-5)" value={priority} max={5} onChange={setPriority} />
               <NumberPicker label="Curiosità (1-5)" value={curiosity} max={5} onChange={setCuriosity} />
