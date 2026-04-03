@@ -1,11 +1,25 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { calculateScore, getCategory, CATEGORY_COLORS, FestivalConfig } from '@/lib/score'
 
+
 type Rating = { artist_id: string; user_id: string; interest?: number; priority?: number; curiosity?: number; already_seen?: boolean }
 type Member = { user_id: string; display_name: string }
-type SpotifyData = { id: string; name: string; image: string | null; popularity: number; genres: string[]; url: string; followers: number }
+type SpotifyData = {
+  id: string
+  name: string
+  image: string | null
+  genres: string[]
+  url: string
+  topTracks: {
+    id: string
+    name: string
+    preview_url: string | null
+    duration_ms: number
+    album_image: string | null
+  }[]
+}
 
 function NumberPicker({ label, value, max, onChange }: { label: string, value: number, max: number, onChange: (v: number) => void }) {
   return (
@@ -22,6 +36,62 @@ function NumberPicker({ label, value, max, onChange }: { label: string, value: n
           </button>
         ))}
       </div>
+    </div>
+  )
+}
+
+function TrackRow({ track }: {
+  track: { id: string; name: string; preview_url: string | null; duration_ms: number; album_image: string | null }
+}) {
+  const [playing, setPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  function togglePlay(e: React.MouseEvent) {
+    e.stopPropagation()
+    if (!track.preview_url) return
+
+    if (!audioRef.current) {
+      audioRef.current = new Audio(track.preview_url)
+      audioRef.current.onended = () => setPlaying(false)
+    }
+
+    if (playing) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      setPlaying(false)
+    } else {
+      // Ferma tutti gli altri audio
+      document.querySelectorAll('audio').forEach(a => a.pause())
+      audioRef.current.play()
+      setPlaying(true)
+    }
+  }
+
+  const minutes = Math.floor(track.duration_ms / 60000)
+  const seconds = Math.floor((track.duration_ms % 60000) / 1000)
+
+  return (
+    <div className="flex items-center gap-2">
+      {track.album_image && (
+        <img src={track.album_image} alt="" className="w-8 h-8 rounded flex-shrink-0" />
+      )}
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-semibold truncate">{track.name}</p>
+        <p className="text-[10px] text-[#999]">{minutes}:{String(seconds).padStart(2, '0')}</p>
+      </div>
+      <button
+        onClick={togglePlay}
+        className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition ${
+          track.preview_url
+            ? playing
+              ? 'bg-[#1DB954] text-white'
+              : 'bg-[#F5F0E8] text-[#666] hover:bg-[#E0D9CC]'
+            : 'bg-[#F5F0E8] text-[#CCC] cursor-not-allowed'
+        }`}
+        title={track.preview_url ? 'Ascolta preview' : 'Preview non disponibile'}
+      >
+        {playing ? '⏹' : '▶'}
+      </button>
     </div>
   )
 }
@@ -114,7 +184,7 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
           {spotify && (
   <div className="border-b border-[#E0D9CC]">
     <div className="flex gap-3 p-3">
-      {/* Immagine quadrata */}
+      {/* Immagine */}
       {spotify.image && (
         <img
           src={spotify.image}
@@ -122,10 +192,20 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
           className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
         />
       )}
-      {/* Info */}
       <div className="flex-1 min-w-0 flex flex-col justify-between">
+        {/* Generi */}
+        {spotify.genres.length > 0 && (
+          <div className="flex gap-1 flex-wrap">
+            {spotify.genres.map(g => (
+              <span key={g} className="text-[10px] bg-[#F5F0E8] text-[#666] px-1.5 py-0.5 rounded font-medium capitalize border border-[#E0D9CC]">
+                {g}
+              </span>
+            ))}
+          </div>
+        )}
+        {/* Link Spotify */}
         
-        <a  href={spotify.url}
+          href={spotify.url}
           target="_blank"
           rel="noopener noreferrer"
           onClick={e => e.stopPropagation()}
@@ -135,6 +215,18 @@ export default function ArtistCard({ artist, ratings, members, userId, config, o
         </a>
       </div>
     </div>
+
+    {/* Top Tracks */}
+    {spotify.topTracks.length > 0 && (
+      <div className="border-t border-[#E0D9CC] px-3 pb-3">
+        <p className="text-[10px] font-black uppercase tracking-widest text-[#999] py-2">Top tracks</p>
+        <div className="space-y-1.5">
+          {spotify.topTracks.map(track => (
+            <TrackRow key={track.id} track={track} />
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 )}
               
