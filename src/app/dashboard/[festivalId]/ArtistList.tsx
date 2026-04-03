@@ -232,6 +232,7 @@ export default function ArtistList({
             members={members.filter(m => selectedMembers.includes(m.user_id))}
             userId={userId}
             config={config}
+            groupId={groupId}
             onRate={newRating => {
               setRatings(prev => {
                 const filtered = prev.filter(r => !(r.artist_id === artist.id && r.user_id === userId))

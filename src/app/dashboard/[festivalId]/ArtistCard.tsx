@@ -26,11 +26,12 @@ function NumberPicker({ label, value, max, onChange }: { label: string, value: n
   )
 }
 
-export default function ArtistCard({ artist, ratings, members, userId, config, onRate }: {
+export default function ArtistCard({ artist, ratings, members, userId, groupId, config, onRate }: {
   artist: { id: string; name: string; day_label?: string | null; event_type?: string | null }
   ratings: Rating[]
   members: Member[]
   userId: string
+  groupId?: string
   config: FestivalConfig
   onRate: (r: Omit<Rating, 'artist_id' | 'user_id'>) => void
 }) {
