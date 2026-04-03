@@ -176,21 +176,31 @@ async function togglePlan(e: React.MouseEvent) {
       .catch(() => setLoadingSpotify(false))
   }, [open])
 
-  async function saveRating() {
-    setSaving(true)
-    const { data: artistData } = await supabase.from('artists').select('festival_id').eq('id', artist.id).single()
-    await supabase.from('ratings').upsert({
-      artist_id: artist.id, user_id: userId,
-      festival_id: artistData?.festival_id,
-      interest, priority, curiosity, already_seen: alreadySeen,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'artist_id,user_id,group_id' })
-    onRate({ interest, priority, curiosity, already_seen: alreadySeen })
-    setSaving(false)
-    setOpen(false)
-    console.log('groupId:', groupId)
-  console.log('festivalId:', festivalId)
+async function saveRating() {
+  setSaving(true)
+  const { data: artistData } = await supabase.from('artists').select('festival_id').eq('id', artist.id).single()
+  
+  const payload = {
+    artist_id: artist.id,
+    user_id: userId,
+    festival_id: artistData?.festival_id,
+    group_id: groupId ?? null,
+    interest,
+    priority,
+    curiosity,
+    already_seen: alreadySeen,
+    updated_at: new Date().toISOString(),
   }
+  console.log('Saving payload:', JSON.stringify(payload))
+  
+  const { data, error } = await supabase.from('ratings').upsert(payload, { onConflict: 'artist_id,user_id,group_id' })
+  console.log('Result:', JSON.stringify({ data, error }))
+  
+  onRate({ interest, priority, curiosity, already_seen: alreadySeen })
+  setSaving(false)
+  setOpen(false)
+}
+  
   
   return (
     <div className={`bg-white border rounded-2xl overflow-hidden transition ${open ? 'border-[#1A1A1A]' : hasMyVote ? 'border-[#E0D9CC]' : 'border-[#E0D9CC] border-dashed'}`}>
