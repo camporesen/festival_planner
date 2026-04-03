@@ -174,7 +174,7 @@ async function togglePlan(e: React.MouseEvent) {
       festival_id: artistData?.festival_id,
       interest, priority, curiosity, already_seen: alreadySeen,
       updated_at: new Date().toISOString(),
-    }, { onConflict: 'artist_id,user_id' })
+    }, { onConflict: 'artist_id,user_id,group_id' })
     onRate({ interest, priority, curiosity, already_seen: alreadySeen })
     setSaving(false)
     setOpen(false)
