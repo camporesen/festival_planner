@@ -15,10 +15,11 @@ export default function GroupHeader({ festival, group, userId }: {
   const supabase = createClient()
 
   function copyCode() {
-    navigator.clipboard.writeText(group.invite_code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+  const link = `${window.location.origin}/join/${group.invite_code}`
+  navigator.clipboard.writeText(link)
+  setCopied(true)
+  setTimeout(() => setCopied(false), 2000)
+}
 
   async function saveName() {
     if (!name.trim() || name === group.name) { setEditing(false); return }
@@ -73,7 +74,7 @@ export default function GroupHeader({ festival, group, userId }: {
           onClick={copyCode}
           className="flex-shrink-0 text-xs bg-[#C8F135] hover:bg-[#b8e020] px-3 py-2 rounded-xl font-mono font-bold transition"
         >
-          {copied ? '✓ Copiato!' : `🔗 ${group.invite_code}`}
+          {copied ? '✓ Link copiato!' : `🔗 Invita amici`}
         </button>
       </div>
     </div>

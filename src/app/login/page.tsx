@@ -1,9 +1,10 @@
 'use client'
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
@@ -12,6 +13,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const next = searchParams.get('next') ?? '/dashboard'
   const supabase = createClient()
 
   async function handleSubmit(e: React.FormEvent) {
@@ -32,7 +35,7 @@ export default function LoginPage() {
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setError(error.message)
-      else router.push('/dashboard')
+      else router.push(next)
     }
     setLoading(false)
   }
@@ -50,6 +53,11 @@ export default function LoginPage() {
             Pianifica<br />il festival
           </h1>
           <p className="text-[#666] mt-2 text-sm">con i tuoi amici</p>
+          {next !== '/dashboard' && (
+            <p className="text-xs text-[#999] mt-2 bg-white border border-[#E0D9CC] rounded-xl px-3 py-2">
+              Accedi per unirti al gruppo
+            </p>
+          )}
         </div>
 
         <div className="bg-white rounded-2xl p-6 border border-[#E0D9CC] shadow-sm">
@@ -103,5 +111,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }
