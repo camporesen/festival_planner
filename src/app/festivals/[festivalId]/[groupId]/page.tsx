@@ -3,10 +3,13 @@ import { createClient } from '@/lib/supabase/server'
 import ArtistList from '@/components/ArtistList'
 import GroupHeader from './GroupHeader'
 
+export const dynamic = 'force-dynamic'
+
 export default async function GroupPage({ params }: { params: Promise<{ festivalId: string, groupId: string }> }) {
   const { festivalId, groupId } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  
   if (!user) redirect('/login')
 
     const { data: plans } = await supabase
@@ -43,9 +46,9 @@ export default async function GroupPage({ params }: { params: Promise<{ festival
     .order('name', { ascending: true })
 
   const { data: ratings } = await supabase
-    .from('ratings')
-    .select('*')
-    .eq('group_id', groupId)
+  .from('ratings')
+  .select('*')
+  .eq('group_id', groupId)
 
   const { data: config } = await supabase
     .from('group_config')
