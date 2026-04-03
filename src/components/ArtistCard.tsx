@@ -191,10 +191,8 @@ async function saveRating() {
     already_seen: alreadySeen,
     updated_at: new Date().toISOString(),
   }
-  console.log('Saving payload:', JSON.stringify(payload))
   
   const { data, error } = await supabase.from('ratings').upsert(payload, { onConflict: 'artist_id,user_id,group_id' })
-  console.log('Result:', JSON.stringify({ data, error }))
   
   onRate({ interest, priority, curiosity, already_seen: alreadySeen })
   setSaving(false)
