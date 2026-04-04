@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { calculateScore, getCategory, CATEGORY_COLORS, DEFAULT_CONFIG, FestivalConfig } from '@/lib/score'
 import ArtistCard from './ArtistCard'
-import AddArtistButton from './AddArtistButton'
 import ConflictsButton from './ConflictsButton'
 import TimelineView from './TimelineView'
 
@@ -240,7 +239,6 @@ useEffect(() => {
         >
           Da votare
         </button>
-        <AddArtistButton festivalId={festivalId} onAdd={artist => setArtists(prev => [...prev, artist])} />
       </div>
 
       {/* Lista artisti */}
