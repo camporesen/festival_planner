@@ -7,6 +7,9 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  const onboardingDone = user.user_metadata?.onboarding_done ?? false
+  if (!onboardingDone) redirect('/onboarding')
+
   // Recupera i gruppi dell'utente con festival info
   const { data: groupMembers } = await supabase
     .from('group_members')

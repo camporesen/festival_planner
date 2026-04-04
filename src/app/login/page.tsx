@@ -33,7 +33,7 @@ function LoginForm() {
         options: { data: { username: username.trim() } }
       })
       if (error) setError(error.message)
-        else router.push(next)
+        else router.push('/onboarding')
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) { setError(error.message); toast(error.message, 'error') }
