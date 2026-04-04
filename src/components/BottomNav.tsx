@@ -8,7 +8,7 @@ export default function BottomNav() {
   const isActive = (path: string) => pathname.startsWith(path)
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#E0D9CC] z-40 safe-area-pb">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#E0D9CC] z-40" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
       <div className="flex items-center justify-around max-w-lg mx-auto">
         <Link
           href="/dashboard"
