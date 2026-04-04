@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import './globals.css'
 import BottomNavWrapper from '@/components/BottomNavWrapper'
 import { ToastContainer } from '@/components/Toast'
-import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
 
 export const metadata: Metadata = {
   title: 'Stageside',
@@ -26,7 +25,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
       <body className="bg-[#F5F0E8] text-[#1A1A1A] min-h-screen">
-        <ServiceWorkerRegistration />
         <ToastContainer />
         {children}
         <BottomNavWrapper />
