@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import ArtistList from '@/components/ArtistList'
 import GroupHeader from './GroupHeader'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 export default async function GroupPage({ params }: { params: Promise<{ festivalId: string, groupId: string }> }) {
   const { festivalId, groupId } = await params
@@ -12,49 +12,23 @@ export default async function GroupPage({ params }: { params: Promise<{ festival
   
   if (!user) redirect('/login')
 
-    const { data: plans } = await supabase
-  .from('plans')
-  .select('artist_id, user_id')
-  .eq('group_id', groupId)
-
-  const { data: festival } = await supabase
-    .from('festivals')
-    .select('*')
-    .eq('id', festivalId)
-    .single()
-
-  if (!festival) redirect('/festivals')
-
-  const { data: group } = await supabase
-    .from('groups')
-    .select('*')
-    .eq('id', groupId)
-    .single()
-
-  if (!group) redirect(`/festivals/${festivalId}`)
-
-  const { data: members } = await supabase
-    .from('group_members')
-    .select('user_id, display_name')
-    .eq('group_id', groupId)
-
-  const { data: artists } = await supabase
-    .from('artists')
-    .select('*')
-    .eq('festival_id', festivalId)
-    .order('day', { ascending: true })
-    .order('name', { ascending: true })
-
-  const { data: ratings } = await supabase
-  .from('ratings')
-  .select('*')
-  .eq('group_id', groupId)
-
-  const { data: config } = await supabase
-    .from('group_config')
-    .select('*')
-    .eq('group_id', groupId)
-    .single()
+  const [
+  { data: festival },
+  { data: group },
+  { data: members },
+  { data: artists },
+  { data: ratings },
+  { data: config },
+  { data: plans }
+] = await Promise.all([
+  supabase.from('festivals').select('*').eq('id', festivalId).single(),
+  supabase.from('groups').select('*').eq('id', groupId).single(),
+  supabase.from('group_members').select('user_id, display_name').eq('group_id', groupId),
+  supabase.from('artists').select('*').eq('festival_id', festivalId).order('day').order('name'),
+  supabase.from('ratings').select('*').eq('group_id', groupId),
+  supabase.from('group_config').select('*').eq('group_id', groupId).single(),
+  supabase.from('plans').select('artist_id, user_id').eq('group_id', groupId),
+])
 
   return (
     <div className="min-h-screen max-w-3xl mx-auto p-4 pb-24">
