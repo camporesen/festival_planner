@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
+import Link from 'next/link'
 
 function LoginForm() {
   const [email, setEmail] = useState('')
@@ -108,6 +109,11 @@ function LoginForm() {
           >
             {isSignUp ? 'Hai già un account? Accedi' : 'Non hai un account? Registrati'}
           </button>
+          {!isSignUp && (
+  <Link href="/forgot-password" className="w-full text-sm text-[#666] hover:text-[#1A1A1A] transition text-center block mt-2">
+    Password dimenticata?
+  </Link>
+)}
         </div>
       </div>
     </div>
