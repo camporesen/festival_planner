@@ -9,13 +9,13 @@ function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
-  const [isSignUp, setIsSignUp] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const router = useRouter()
   const searchParams = useSearchParams()
   const next = searchParams.get('next') ?? '/dashboard'
+  const [isSignUp, setIsSignUp] = useState(searchParams.get('signup') === 'true')
   const supabase = createClient()
 
   async function handleSubmit(e: React.FormEvent) {
