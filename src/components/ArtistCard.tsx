@@ -238,7 +238,7 @@ export default function ArtistCard({ artist, ratings, members, userId, groupId, 
                   <div className="flex items-start gap-2">
                     <span>🎯</span>
                     <div>
-                      <p className="font-black text-[#1A1A1A]">Interesse (1-10)</p>
+                      <p className="font-black text-[#1A1A1A]">Interesse (1-5)</p>
                       <p className="text-[#666]">Quanto ti piace l'artista in generale. È il peso maggiore nello score.</p>
                     </div>
                   </div>
@@ -266,7 +266,7 @@ export default function ArtistCard({ artist, ratings, members, userId, groupId, 
                 </div>
               )}
 
-              <NumberPicker label="Interesse (1-10)" value={interest} max={10} onChange={setInterest} />
+              <NumberPicker label="Interesse (1-5)" value={interest} max={5} onChange={setInterest} />
               <NumberPicker label="Priorità (1-5)" value={priority} max={5} onChange={setPriority} />
               <NumberPicker label="Curiosità (1-5)" value={curiosity} max={5} onChange={setCuriosity} />
               <label className="flex items-center gap-2 cursor-pointer">
