@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import LogoutButton from './LogoutButton'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -24,7 +23,6 @@ export default async function DashboardPage() {
           </div>
           <h1 className="text-2xl font-black uppercase tracking-tight">I tuoi gruppi</h1>
         </div>
-        <LogoutButton />
       </div>
 
       {/* Pulsante cerca festival */}
