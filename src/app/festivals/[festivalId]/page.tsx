@@ -29,7 +29,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ festi
   const username = user.user_metadata?.username ?? user.email!.split('@')[0]
 
   return (
-    <div className="min-h-screen max-w-2xl mx-auto p-4">
+    <div className="min-h-screen max-w-2xl mx-auto p-4 pb-24">
       <div className="pt-4 mb-6">
         <Link href="/festivals" className="text-sm text-[#666] hover:text-[#1A1A1A] transition mb-3 inline-block">
           ← Tutti i festival

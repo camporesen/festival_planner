@@ -15,7 +15,7 @@ export default async function FestivalsPage() {
     .order('start_date', { ascending: true })
 
   return (
-    <div className="min-h-screen max-w-2xl mx-auto p-4">
+    <div className="min-h-screen max-w-2xl mx-auto p-4 pb-24">
       <div className="flex items-center justify-between mb-8 pt-4">
         <div>
           <div className="inline-block bg-[#C8F135] px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-widest mb-1">

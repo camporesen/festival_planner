@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import BottomNavWrapper from '@/components/BottomNavWrapper'
 
 export const metadata: Metadata = {
   title: 'Stageside',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     title: 'Stageside',
   },
 }
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="it">
@@ -23,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-[#F5F0E8] text-[#1A1A1A] min-h-screen">
         {children}
+        <BottomNavWrapper />
       </body>
     </html>
   )

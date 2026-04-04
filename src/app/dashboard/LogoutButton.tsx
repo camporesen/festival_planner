@@ -9,8 +9,11 @@ export default function LogoutButton() {
     router.push('/login')
   }
   return (
-    <button onClick={logout} className="text-sm text-[#666] hover:text-[#1A1A1A] transition font-medium">
-      Esci
+    <button
+      onClick={logout}
+      className="w-full text-left text-sm font-bold text-red-500 hover:text-red-700 transition"
+    >
+      Esci dall'account
     </button>
   )
 }
