@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { toast } from '@/components/Toast'
 
 export default function JoinGroupButton({ festivalId, userId, username }: {
   festivalId: string
@@ -25,7 +26,7 @@ export default function JoinGroupButton({ festivalId, userId, username }: {
       .eq('festival_id', festivalId)
       .single()
 
-    if (!group) { setError('Codice non valido.'); setLoading(false); return }
+    if (!group) { toast('Codice non valido', 'error'); setLoading(false); return }
 
     const { error: memberError } = await supabase
       .from('group_members')
@@ -35,6 +36,7 @@ export default function JoinGroupButton({ festivalId, userId, username }: {
       setError('Errore durante il join.'); setLoading(false); return
     }
 
+    toast('Sei entrato nel gruppo!', 'success')
     router.push(`/festivals/${festivalId}/${group.id}`)
     setLoading(false)
   }

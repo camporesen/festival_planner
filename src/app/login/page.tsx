@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import Link from 'next/link'
+import { toast } from '@/components/Toast'
 
 function LoginForm() {
   const [email, setEmail] = useState('')
@@ -35,7 +36,7 @@ function LoginForm() {
         else router.push(next)
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
-      if (error) setError(error.message)
+      if (error) { setError(error.message); toast(error.message, 'error') }
       else router.push(next)
     }
     setLoading(false)

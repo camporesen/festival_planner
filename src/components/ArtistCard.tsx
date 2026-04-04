@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { calculateScore, getCategory, CATEGORY_COLORS, FestivalConfig } from '@/lib/score'
+import { toast } from '@/components/Toast'
 
 type Rating = { artist_id: string; user_id: string; interest?: number; priority?: number; curiosity?: number; already_seen?: boolean }
 type Member = { user_id: string; display_name: string }
@@ -82,34 +83,41 @@ export default function ArtistCard({ artist, ratings, members, userId, groupId, 
   }, [open])
 
   async function togglePlan(e: React.MouseEvent) {
-    e.stopPropagation()
-    if (!groupId || !festivalId) return
-    setSavingPlan(true)
+  e.stopPropagation()
+  if (!groupId || !festivalId) return
+  setSavingPlan(true)
+  try {
     if (inPlan) {
-      await supabase.from('plans')
+      const { error } = await supabase.from('plans')
         .delete()
         .eq('group_id', groupId)
         .eq('user_id', userId)
         .eq('artist_id', artist.id)
+      if (error) throw error
       setInPlan(false)
       onPlanChange?.(artist.id, false)
     } else {
-      await supabase.from('plans').insert({
+      const { error } = await supabase.from('plans').insert({
         group_id: groupId,
         festival_id: festivalId,
         user_id: userId,
         artist_id: artist.id,
       })
+      if (error) throw error
       setInPlan(true)
       onPlanChange?.(artist.id, true)
     }
-    setSavingPlan(false)
+  } catch (e) {
+    toast('Errore, riprova', 'error')
   }
+  setSavingPlan(false)
+}
 
   async function saveRating() {
-    setSaving(true)
+  setSaving(true)
+  try {
     const { data: artistData } = await supabase.from('artists').select('festival_id').eq('id', artist.id).single()
-    await supabase.from('ratings').upsert({
+    const { error } = await supabase.from('ratings').upsert({
       artist_id: artist.id,
       user_id: userId,
       festival_id: artistData?.festival_id,
@@ -120,10 +128,15 @@ export default function ArtistCard({ artist, ratings, members, userId, groupId, 
       already_seen: alreadySeen,
       updated_at: new Date().toISOString(),
     }, { onConflict: 'artist_id,user_id,group_id' })
+    if (error) throw error
     onRate({ interest, priority, curiosity, already_seen: alreadySeen })
-    setSaving(false)
+    toast('Voto salvato', 'success')
     setOpen(false)
+  } catch (e) {
+    toast('Errore nel salvataggio', 'error')
   }
+  setSaving(false)
+}
 
   return (
     <div className={`bg-white border rounded-2xl overflow-hidden transition ${open ? 'border-[#1A1A1A]' : hasMyVote ? 'border-[#E0D9CC]' : 'border-[#E0D9CC] border-dashed'}`}>

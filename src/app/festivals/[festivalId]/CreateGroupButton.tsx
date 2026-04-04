@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { toast } from '@/components/Toast'
 
 export default function CreateGroupButton({ festivalId, userId, username }: {
   festivalId: string
@@ -24,7 +25,7 @@ export default function CreateGroupButton({ festivalId, userId, username }: {
       .select()
       .single()
 
-    if (error) { setLoading(false); return }
+    if (error) { toast('Errore nella creazione del gruppo', 'error'); setLoading(false); return }
 
     if (group) {
       await supabase.from('group_members').insert({
@@ -33,6 +34,8 @@ export default function CreateGroupButton({ festivalId, userId, username }: {
         display_name: username,
       })
       await supabase.from('group_config').insert({ group_id: group.id })
+
+      toast('Gruppo creato!', 'success')
       router.push(`/festivals/${festivalId}/${group.id}`)
     }
     setLoading(false)
