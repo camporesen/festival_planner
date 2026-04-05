@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -9,6 +10,8 @@ export default function ForgotPasswordPage() {
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
   const supabase = createClient()
+  const t = useTranslations('forgot_password')
+  const tc = useTranslations('common')
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -27,26 +30,25 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="inline-block bg-[#C8F135] px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
-            Stageside
+            {tc('app_name')}
           </div>
           <h1 className="text-3xl font-black uppercase tracking-tight leading-none">
-            Reset password
+            {t('title')}
           </h1>
         </div>
-
         <div className="bg-white rounded-2xl p-6 border border-[#E0D9CC] shadow-sm">
           {sent ? (
             <div className="text-center space-y-4">
               <p className="text-4xl">📬</p>
-              <p className="font-bold">Email inviata!</p>
-              <p className="text-sm text-[#666]">Controlla la tua casella e clicca il link per reimpostare la password.</p>
+              <p className="font-bold">{t('sent_title')}</p>
+              <p className="text-sm text-[#666]">{t('sent_desc')}</p>
               <Link href="/login" className="block text-sm text-[#666] hover:text-[#1A1A1A] transition mt-4">
-                ← Torna al login
+                {t('back_login')}
               </Link>
             </div>
           ) : (
             <>
-              <p className="text-sm text-[#666] mb-4">Inserisci la tua email e ti mandiamo un link per reimpostare la password.</p>
+              <p className="text-sm text-[#666] mb-4">{t('desc')}</p>
               <form onSubmit={handleSubmit} className="space-y-3">
                 <input
                   type="email"
@@ -62,11 +64,11 @@ export default function ForgotPasswordPage() {
                   disabled={loading}
                   className="w-full bg-[#1A1A1A] hover:bg-[#333] text-white disabled:opacity-50 rounded-xl py-2.5 text-sm font-bold transition"
                 >
-                  {loading ? '...' : 'Invia link reset'}
+                  {loading ? '...' : t('send')}
                 </button>
               </form>
               <Link href="/login" className="block text-sm text-[#666] hover:text-[#1A1A1A] transition mt-4 text-center">
-                ← Torna al login
+                {t('back_login')}
               </Link>
             </>
           )}

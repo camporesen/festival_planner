@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useTranslations } from 'next-intl'
 
 export default function GroupHeader({ festival, group, userId }: {
   festival: any
@@ -13,13 +14,15 @@ export default function GroupHeader({ festival, group, userId }: {
   const [name, setName] = useState(group.name)
   const [saving, setSaving] = useState(false)
   const supabase = createClient()
+  const t = useTranslations('group')
+  const tc = useTranslations('common')
 
   function copyCode() {
-  const link = `${window.location.origin}/join/${group.invite_code}`
-  navigator.clipboard.writeText(link)
-  setCopied(true)
-  setTimeout(() => setCopied(false), 2000)
-}
+    const link = `${window.location.origin}/join/${group.invite_code}`
+    navigator.clipboard.writeText(link)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   async function saveName() {
     if (!name.trim() || name === group.name) { setEditing(false); return }
@@ -48,10 +51,10 @@ export default function GroupHeader({ festival, group, userId }: {
                 className="text-2xl font-black uppercase tracking-tight leading-none bg-transparent border-b-2 border-[#1A1A1A] focus:outline-none w-full"
               />
               <button onClick={saveName} disabled={saving} className="text-xs bg-[#1A1A1A] text-white px-3 py-1.5 rounded-lg font-bold flex-shrink-0">
-                {saving ? '...' : 'Salva'}
+                {saving ? '...' : tc('save')}
               </button>
               <button onClick={() => { setEditing(false); setName(group.name) }} className="text-xs text-[#666] px-2 py-1.5 flex-shrink-0">
-                Annulla
+                {tc('cancel')}
               </button>
             </div>
           ) : (
@@ -61,7 +64,6 @@ export default function GroupHeader({ festival, group, userId }: {
                 <button
                   onClick={() => setEditing(true)}
                   className="text-[#999] hover:text-[#1A1A1A] transition flex-shrink-0"
-                  title="Rinomina gruppo"
                 >
                   ✏️
                 </button>
@@ -74,7 +76,7 @@ export default function GroupHeader({ festival, group, userId }: {
           onClick={copyCode}
           className="flex-shrink-0 text-xs bg-[#C8F135] hover:bg-[#b8e020] px-3 py-2 rounded-xl font-mono font-bold transition"
         >
-          {copied ? '✓ Link copiato!' : `🔗 Invita amici`}
+          {copied ? t('invite_copied') : t('invite_button')}
         </button>
       </div>
     </div>
