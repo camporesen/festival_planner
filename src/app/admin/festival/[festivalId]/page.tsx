@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import ImportArtistsButton from './ImportArtistsButton'
+import TogglePublicButton from './TogglePublicButton'
 
 const ADMIN_USER_ID = '39b2c8c8-6edf-4893-81ad-73e1a6240158'
 
@@ -67,6 +68,10 @@ export default async function AdminFestivalPage({ params }: { params: Promise<{ 
           <p className="text-2xl font-black">{ratingCount ?? 0}</p>
           <p className="text-[10px] text-[#666] font-bold uppercase tracking-wide mt-0.5">Voti</p>
         </div>
+      </div>
+
+      <div className="mb-6">
+        <TogglePublicButton festivalId={festivalId} isPublic={festival.is_public} />
       </div>
 
       {/* Import artisti */}
