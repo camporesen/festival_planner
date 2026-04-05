@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation'
 import BottomNav from './BottomNav'
 import { Suspense } from 'react'
 
-const HIDDEN_PATHS = ['/', '/login', '/forgot-password', '/reset-password', '/join', '/onboarding']
+const HIDDEN_PATHS = ['/', '/login', '/forgot-password', '/reset-password', '/join', '/onboarding', '/admin']
 
 function BottomNavInner() {
   const pathname = usePathname()
