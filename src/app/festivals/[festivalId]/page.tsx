@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import CreateGroupButton from './CreateGroupButton'
 import JoinGroupButton from './JoinGroupButton'
+import { notFound } from 'next/navigation'
 
 export default async function FestivalPage({ params }: { params: Promise<{ festivalId: string }> }) {
   const { festivalId } = await params
@@ -16,8 +17,7 @@ export default async function FestivalPage({ params }: { params: Promise<{ festi
     .eq('id', festivalId)
     .single()
 
-    
-  if (!festival) redirect('/festivals')
+  if (!festival) notFound()
 
   // Gruppi del festival a cui appartiene l'utente
   const { data: myGroups } = await supabase

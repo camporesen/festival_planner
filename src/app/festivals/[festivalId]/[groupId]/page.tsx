@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import ArtistList from '@/components/ArtistList'
 import GroupHeader from './GroupHeader'
+import { notFound } from 'next/navigation'
 
 export const revalidate = 0
 
@@ -29,6 +30,9 @@ export default async function GroupPage({ params }: { params: Promise<{ festival
   supabase.from('group_config').select('*').eq('group_id', groupId).single(),
   supabase.from('plans').select('artist_id, user_id').eq('group_id', groupId),
 ])
+
+if (!festival) notFound()
+  if (!group) notFound()
 
   return (
     <div className="min-h-screen max-w-3xl mx-auto p-4 pb-24">
