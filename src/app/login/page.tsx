@@ -32,8 +32,8 @@ function LoginForm() {
         password,
         options: { data: { username: username.trim() } }
       })
-      if (error) { setError(error.message); toast(error.message, 'error') }
-      else setMessage('Controlla la tua email per confermare l\'account.')
+      if (error) setError(error.message)
+        else router.push('/onboarding')
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) { setError(error.message); toast(error.message, 'error') }
