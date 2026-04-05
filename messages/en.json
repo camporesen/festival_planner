@@ -151,5 +151,10 @@
     "update": "Update password",
     "done_title": "Password updated!",
     "done_desc": "You'll be redirected shortly..."
-  }
+  },
+  "username_required": "Choose a username.",
+"tagline_line1": "Plan",
+"tagline_line2": "the festival",
+"tagline_sub": "with your friends",
+"join_group": "Log in to join the group"
 }

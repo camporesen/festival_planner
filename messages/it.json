@@ -151,5 +151,10 @@
     "update": "Aggiorna password",
     "done_title": "Password aggiornata!",
     "done_desc": "Stai per essere reindirizzato..."
-  }
+  },
+  "username_required": "Scegli uno username.",
+"tagline_line1": "Pianifica",
+"tagline_line2": "il festival",
+"tagline_sub": "con i tuoi amici",
+"join_group": "Accedi per unirti al gruppo"
 }

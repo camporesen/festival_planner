@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import FestivalSearch from './FestivalSearch'
+import { getTranslations } from 'next-intl/server'
 
 export default async function FestivalsPage() {
   const supabase = await createClient()
@@ -14,6 +15,9 @@ export default async function FestivalsPage() {
     .eq('is_public', true)
     .order('start_date', { ascending: true })
 
+  const t = await getTranslations('festivals')
+  const td = await getTranslations('dashboard')
+
   return (
     <div className="min-h-screen max-w-2xl mx-auto p-4 pb-24">
       <div className="flex items-center justify-between mb-8 pt-4">
@@ -21,13 +25,12 @@ export default async function FestivalsPage() {
           <div className="inline-block bg-[#C8F135] px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-widest mb-1">
             Stageside
           </div>
-          <h1 className="text-2xl font-black uppercase tracking-tight">Trova un festival</h1>
+          <h1 className="text-2xl font-black uppercase tracking-tight">{t('title')}</h1>
         </div>
         <Link href="/dashboard" className="text-sm text-[#666] hover:text-[#1A1A1A] transition font-medium">
-          I tuoi gruppi
+          {td('title')}
         </Link>
       </div>
-
       <FestivalSearch festivals={festivals ?? []} />
     </div>
   )

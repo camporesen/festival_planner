@@ -151,5 +151,10 @@
     "update": "Actualizar contraseña",
     "done_title": "¡Contraseña actualizada!",
     "done_desc": "Serás redirigido en breve..."
-  }
+  },
+  "username_required": "Elige un nombre de usuario.",
+"tagline_line1": "Planifica",
+"tagline_line2": "el festival",
+"tagline_sub": "con tus amigos",
+"join_group": "Inicia sesión para unirte al grupo"
 }

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import { getTranslations, getLocale } from 'next-intl/server'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -10,28 +11,30 @@ export default async function DashboardPage() {
   const onboardingDone = user.user_metadata?.onboarding_done ?? false
   if (!onboardingDone) redirect('/onboarding')
 
-  // Recupera i gruppi dell'utente con festival info
   const { data: groupMembers } = await supabase
     .from('group_members')
     .select('group_id, display_name, groups(id, name, invite_code, festival_id, festivals(id, name, location, start_date, end_date))')
     .eq('user_id', user.id)
     .order('joined_at', { ascending: false })
 
+  const t = await getTranslations('dashboard')
+  const tc = await getTranslations('common')
+  const locale = await getLocale()
+
   return (
     <div className="min-h-screen p-4 max-w-2xl mx-auto pb-24">
       <div className="flex items-center justify-between mb-8 pt-4">
         <div>
           <div className="inline-block bg-[#C8F135] px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-widest mb-1">
-            Stageside
+            {tc('app_name')}
           </div>
-          <h1 className="text-2xl font-black uppercase tracking-tight">I tuoi gruppi</h1>
+          <h1 className="text-2xl font-black uppercase tracking-tight">{t('title')}</h1>
         </div>
       </div>
 
-      {/* Pulsante cerca festival */}
       <Link href="/festivals">
         <div className="w-full bg-[#1A1A1A] hover:bg-[#333] text-white rounded-xl py-3 text-sm font-bold transition uppercase tracking-wide text-center mb-6">
-          🔍 Cerca un festival
+          {t('discover')}
         </div>
       </Link>
 
@@ -39,8 +42,8 @@ export default async function DashboardPage() {
         {(!groupMembers || groupMembers.length === 0) && (
           <div className="text-center py-16 text-[#999]">
             <p className="text-4xl mb-3">🎪</p>
-            <p className="font-medium">Nessun gruppo ancora.</p>
-            <p className="text-sm mt-1">Cerca un festival e crea o unisciti a un gruppo.</p>
+            <p className="font-medium">{t('empty')}</p>
+            <p className="text-sm mt-1">{t('empty_sub')}</p>
           </div>
         )}
         {groupMembers?.map((m: any) => {
@@ -57,8 +60,8 @@ export default async function DashboardPage() {
                     {festival.location && <p className="text-[#666] text-sm">{festival.location}</p>}
                     {festival.start_date && (
                       <p className="text-[#999] text-xs mt-1">
-                        {new Date(festival.start_date).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}
-                        {festival.end_date && ` → ${new Date(festival.end_date).toLocaleDateString('it-IT', { day: 'numeric', month: 'long' })}`}
+                        {new Date(festival.start_date).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' })}
+                        {festival.end_date && ` → ${new Date(festival.end_date).toLocaleDateString(locale, { day: 'numeric', month: 'long' })}`}
                       </p>
                     )}
                   </div>
