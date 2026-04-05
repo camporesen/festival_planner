@@ -1,0 +1,155 @@
+{
+  "common": {
+    "app_name": "Stageside",
+    "loading": "Caricamento...",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "back": "Indietro",
+    "error": "Errore, riprova",
+    "confirm": "Conferma"
+  },
+  "nav": {
+    "groups": "Gruppi",
+    "discover": "Scopri",
+    "profile": "Profilo"
+  },
+  "landing": {
+    "tagline": "Il festival con i tuoi amici",
+    "description": "Votate gli artisti, costruite il programma insieme, e scoprite dove essere in ogni momento.",
+    "cta_start": "Inizia gratis",
+    "cta_login": "Accedi",
+    "feature1_title": "Vota gli artisti",
+    "feature1_desc": "Interesse, priorità e curiosità — lo score del gruppo decide cosa non perdere.",
+    "feature2_title": "Pianifica con gli amici",
+    "feature2_desc": "Crea un gruppo privato, condividi un link e vedete i voti di tutti in tempo reale.",
+    "feature3_title": "Timeline e conflitti",
+    "feature3_desc": "Quando escono gli orari, vedi la timeline del giorno e i conflitti tra i tuoi MUST SEE.",
+    "feature4_title": "Dove siamo?",
+    "feature4_desc": "Segna quali concerti vuoi vedere — i tuoi amici sanno sempre dove trovarti.",
+    "footer": "Primavera Sound 2026 già disponibile 🎪"
+  },
+  "auth": {
+    "login": "Accedi",
+    "signup": "Crea account",
+    "email": "email",
+    "password": "password",
+    "username": "username (es. nicolò)",
+    "forgot_password": "Password dimenticata?",
+    "no_account": "Non hai un account? Registrati",
+    "have_account": "Hai già un account? Accedi",
+    "confirm_email": "Controlla la tua email per confermare l'account."
+  },
+  "dashboard": {
+    "title": "I tuoi gruppi",
+    "discover": "🔍 Cerca un festival",
+    "empty": "Nessun gruppo ancora.",
+    "empty_sub": "Cerca un festival e crea o unisciti a un gruppo."
+  },
+  "festivals": {
+    "title": "Trova un festival",
+    "search_placeholder": "Cerca festival... (es. Primavera Sound)",
+    "public_badge": "Pubblico",
+    "empty": "Nessun festival trovato.",
+    "empty_sub": "Prova con un altro nome."
+  },
+  "group": {
+    "create": "+ Crea gruppo",
+    "join": "Unisciti",
+    "join_title": "Unisciti a un gruppo",
+    "create_title": "Nuovo gruppo",
+    "invite_code": "Codice invite del gruppo",
+    "no_groups": "Non sei in nessun gruppo.",
+    "no_groups_sub": "Creane uno o unisciti con un codice.",
+    "members": "membri",
+    "invite_copied": "✓ Link copiato!",
+    "invite_button": "🔗 Invita amici"
+  },
+  "artists": {
+    "filter_all": "Tutti",
+    "filter_unrated": "Da votare",
+    "add_artist": "+ Artista",
+    "no_artists": "Nessun artista trovato.",
+    "no_artists_sub": "Aggiungi il primo artista con il pulsante +",
+    "not_rated": "non votato",
+    "already_seen": "L'ho già visto live",
+    "save_rating": "Salva voto",
+    "saving": "...",
+    "go_plan": "+ Piano",
+    "in_plan": "✓ Ci vado",
+    "how_it_works": "ℹ️ come funziona",
+    "close": "✕ chiudi",
+    "your_vote": "Il tuo voto",
+    "interest": "Interesse (1-5)",
+    "priority": "Priorità (1-5)",
+    "curiosity": "Curiosità (1-5)",
+    "interest_desc": "Quanto ti piace l'artista in generale. È il peso maggiore nello score.",
+    "priority_desc": "Quanto è importante vederlo live — rarità, tour rari, momenti unici.",
+    "curiosity_desc": "Quanto vuoi scoprirlo — artisti che non conosci bene ma vuoi esplorare.",
+    "seen_desc": "Se l'hai già visto, riduce leggermente il bonus mai visto nello score.",
+    "open_spotify": "▶ Apri su Spotify",
+    "loading_spotify": "Caricamento..."
+  },
+  "progress": {
+    "rated": "artisti votati"
+  },
+  "conflicts": {
+    "title": "Conflitti orari",
+    "subtitle": "Artisti MUST SEE e ALTO con orari sovrapposti",
+    "none": "Nessun conflitto!",
+    "none_sub": "I tuoi artisti preferiti non si sovrappongono.",
+    "overlap": "min di sovrapposizione",
+    "close": "Chiudi"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "close": "Chiudi",
+    "in_plan": "Nel piano",
+    "conflict": "Conflitto"
+  },
+  "profile": {
+    "title": "Profilo",
+    "change_password": "Cambia password",
+    "change_password_sub": "Ricevi un link via email",
+    "logout": "Esci dall'account"
+  },
+  "onboarding": {
+    "skip": "Salta",
+    "next": "Avanti",
+    "start": "Inizia",
+    "step1_title": "Trova il tuo festival",
+    "step1_desc": "Cerca tra i festival già pronti su Stageside. La lineup è già caricata — non devi fare niente.",
+    "step1_highlight": "Primavera Sound 2026 è già disponibile",
+    "step2_title": "Crea il tuo gruppo",
+    "step2_desc": "Ogni festival ha i suoi gruppi privati. Crea il tuo e invita gli amici con un semplice link.",
+    "step2_highlight": "Solo il tuo gruppo vede i vostri voti",
+    "step3_title": "Vota e pianifica",
+    "step3_desc": "Votate gli artisti insieme. Lo score del gruppo decide i MUST SEE. Costruite il piano del giorno e sapete sempre dove trovarvi.",
+    "step3_highlight": "Timeline, conflitti e piani in tempo reale"
+  },
+  "not_found": {
+    "festival_title": "Festival non trovato",
+    "festival_desc": "Questo festival non esiste o non è più disponibile.",
+    "festival_cta": "Cerca altri festival",
+    "group_title": "Gruppo non trovato",
+    "group_desc": "Questo gruppo non esiste o non hai i permessi per accedervi.",
+    "group_cta": "Torna ai festival"
+  },
+  "forgot_password": {
+    "title": "Reset password",
+    "desc": "Inserisci la tua email e ti mandiamo un link per reimpostare la password.",
+    "send": "Invia link reset",
+    "sent_title": "Email inviata!",
+    "sent_desc": "Controlla la tua casella e clicca il link per reimpostare la password.",
+    "back_login": "← Torna al login"
+  },
+  "reset_password": {
+    "title": "Nuova password",
+    "new_password": "nuova password",
+    "confirm_password": "conferma password",
+    "mismatch": "Le password non coincidono.",
+    "too_short": "La password deve essere di almeno 6 caratteri.",
+    "update": "Aggiorna password",
+    "done_title": "Password aggiornata!",
+    "done_desc": "Stai per essere reindirizzato..."
+  }
+}

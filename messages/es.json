@@ -1,0 +1,155 @@
+{
+  "common": {
+    "app_name": "Stageside",
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "error": "Error, inténtalo de nuevo",
+    "confirm": "Confirmar"
+  },
+  "nav": {
+    "groups": "Grupos",
+    "discover": "Descubrir",
+    "profile": "Perfil"
+  },
+  "landing": {
+    "tagline": "El festival con tus amigos",
+    "description": "Votad los artistas, construid el programa juntos y sabed dónde estar en cada momento.",
+    "cta_start": "Empieza gratis",
+    "cta_login": "Iniciar sesión",
+    "feature1_title": "Vota artistas",
+    "feature1_desc": "Interés, prioridad y curiosidad — el score del grupo decide qué no perderse.",
+    "feature2_title": "Planifica con amigos",
+    "feature2_desc": "Crea un grupo privado, comparte un enlace y ved los votos de todos en tiempo real.",
+    "feature3_title": "Timeline y conflictos",
+    "feature3_desc": "Cuando salgan los horarios, ve la timeline del día y los conflictos entre tus MUST SEE.",
+    "feature4_title": "¿Dónde estamos?",
+    "feature4_desc": "Marca qué conciertos quieres ver — tus amigos siempre saben dónde encontrarte.",
+    "footer": "Primavera Sound 2026 ya disponible 🎪"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta",
+    "email": "email",
+    "password": "contraseña",
+    "username": "nombre de usuario (ej. carlos)",
+    "forgot_password": "¿Olvidaste tu contraseña?",
+    "no_account": "¿No tienes cuenta? Regístrate",
+    "have_account": "¿Ya tienes cuenta? Inicia sesión",
+    "confirm_email": "Revisa tu email para confirmar tu cuenta."
+  },
+  "dashboard": {
+    "title": "Tus grupos",
+    "discover": "🔍 Buscar un festival",
+    "empty": "Ningún grupo todavía.",
+    "empty_sub": "Busca un festival y crea o únete a un grupo."
+  },
+  "festivals": {
+    "title": "Encuentra un festival",
+    "search_placeholder": "Buscar festivales... (ej. Primavera Sound)",
+    "public_badge": "Público",
+    "empty": "No se encontraron festivales.",
+    "empty_sub": "Prueba con otro nombre."
+  },
+  "group": {
+    "create": "+ Crear grupo",
+    "join": "Unirse",
+    "join_title": "Unirse a un grupo",
+    "create_title": "Nuevo grupo",
+    "invite_code": "Código de invitación del grupo",
+    "no_groups": "No estás en ningún grupo.",
+    "no_groups_sub": "Crea uno o únete con un código.",
+    "members": "miembros",
+    "invite_copied": "✓ ¡Copiado!",
+    "invite_button": "🔗 Invitar amigos"
+  },
+  "artists": {
+    "filter_all": "Todos",
+    "filter_unrated": "Sin votar",
+    "add_artist": "+ Artista",
+    "no_artists": "No se encontraron artistas.",
+    "no_artists_sub": "Añade el primer artista con el botón +",
+    "not_rated": "sin votar",
+    "already_seen": "Ya les he visto en directo",
+    "save_rating": "Guardar voto",
+    "saving": "...",
+    "go_plan": "+ Plan",
+    "in_plan": "✓ Voy",
+    "how_it_works": "ℹ️ cómo funciona",
+    "close": "✕ cerrar",
+    "your_vote": "Tu voto",
+    "interest": "Interés (1-5)",
+    "priority": "Prioridad (1-5)",
+    "curiosity": "Curiosidad (1-5)",
+    "interest_desc": "Cuánto te gusta el artista en general. Tiene el mayor peso en el score.",
+    "priority_desc": "Lo importante que es verles en directo — rareza, giras especiales, momentos únicos.",
+    "curiosity_desc": "Cuánto quieres descubrirles — artistas que no conoces bien pero quieres explorar.",
+    "seen_desc": "Si ya les has visto, reduce ligeramente el bonus nunca-visto en el score.",
+    "open_spotify": "▶ Abrir en Spotify",
+    "loading_spotify": "Cargando..."
+  },
+  "progress": {
+    "rated": "artistas votados"
+  },
+  "conflicts": {
+    "title": "Conflictos de horario",
+    "subtitle": "Artistas MUST SEE y ALTO con horarios solapados",
+    "none": "¡Sin conflictos!",
+    "none_sub": "Tus artistas favoritos no se solapan.",
+    "overlap": "min de solapamiento",
+    "close": "Cerrar"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "close": "Cerrar",
+    "in_plan": "En el plan",
+    "conflict": "Conflicto"
+  },
+  "profile": {
+    "title": "Perfil",
+    "change_password": "Cambiar contraseña",
+    "change_password_sub": "Recibe un enlace por email",
+    "logout": "Cerrar sesión"
+  },
+  "onboarding": {
+    "skip": "Omitir",
+    "next": "Siguiente",
+    "start": "Empezar",
+    "step1_title": "Encuentra tu festival",
+    "step1_desc": "Busca entre los festivales ya disponibles en Stageside. La alineación ya está cargada.",
+    "step1_highlight": "Primavera Sound 2026 ya disponible",
+    "step2_title": "Crea tu grupo",
+    "step2_desc": "Cada festival tiene grupos privados. Crea el tuyo e invita a amigos con un simple enlace.",
+    "step2_highlight": "Solo tu grupo ve vuestros votos",
+    "step3_title": "Vota y planifica",
+    "step3_desc": "Votad artistas juntos. El score del grupo decide los MUST SEE. Construid el plan del día.",
+    "step3_highlight": "Timeline, conflictos y planes en tiempo real"
+  },
+  "not_found": {
+    "festival_title": "Festival no encontrado",
+    "festival_desc": "Este festival no existe o ya no está disponible.",
+    "festival_cta": "Buscar festivales",
+    "group_title": "Grupo no encontrado",
+    "group_desc": "Este grupo no existe o no tienes acceso.",
+    "group_cta": "Volver a festivales"
+  },
+  "forgot_password": {
+    "title": "Restablecer contraseña",
+    "desc": "Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.",
+    "send": "Enviar enlace",
+    "sent_title": "¡Email enviado!",
+    "sent_desc": "Revisa tu bandeja de entrada y haz clic en el enlace.",
+    "back_login": "← Volver al inicio de sesión"
+  },
+  "reset_password": {
+    "title": "Nueva contraseña",
+    "new_password": "nueva contraseña",
+    "confirm_password": "confirmar contraseña",
+    "mismatch": "Las contraseñas no coinciden.",
+    "too_short": "La contraseña debe tener al menos 6 caracteres.",
+    "update": "Actualizar contraseña",
+    "done_title": "¡Contraseña actualizada!",
+    "done_desc": "Serás redirigido en breve..."
+  }
+}

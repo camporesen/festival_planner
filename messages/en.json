@@ -1,0 +1,155 @@
+{
+  "common": {
+    "app_name": "Stageside",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "error": "Error, please try again",
+    "confirm": "Confirm"
+  },
+  "nav": {
+    "groups": "Groups",
+    "discover": "Discover",
+    "profile": "Profile"
+  },
+  "landing": {
+    "tagline": "The festival with your friends",
+    "description": "Rate artists, build your schedule together, and know where to be at every moment.",
+    "cta_start": "Start for free",
+    "cta_login": "Log in",
+    "feature1_title": "Rate artists",
+    "feature1_desc": "Interest, priority and curiosity — the group score decides what you can't miss.",
+    "feature2_title": "Plan with friends",
+    "feature2_desc": "Create a private group, share a link and see everyone's ratings in real time.",
+    "feature3_title": "Timeline and conflicts",
+    "feature3_desc": "When schedules drop, see the day's timeline and conflicts between your MUST SEEs.",
+    "feature4_title": "Where are we?",
+    "feature4_desc": "Mark which shows you want to see — your friends always know where to find you.",
+    "footer": "Primavera Sound 2026 already available 🎪"
+  },
+  "auth": {
+    "login": "Log in",
+    "signup": "Create account",
+    "email": "email",
+    "password": "password",
+    "username": "username (e.g. john)",
+    "forgot_password": "Forgot password?",
+    "no_account": "No account? Sign up",
+    "have_account": "Already have an account? Log in",
+    "confirm_email": "Check your email to confirm your account."
+  },
+  "dashboard": {
+    "title": "Your groups",
+    "discover": "🔍 Find a festival",
+    "empty": "No groups yet.",
+    "empty_sub": "Find a festival and create or join a group."
+  },
+  "festivals": {
+    "title": "Find a festival",
+    "search_placeholder": "Search festivals... (e.g. Primavera Sound)",
+    "public_badge": "Public",
+    "empty": "No festivals found.",
+    "empty_sub": "Try a different name."
+  },
+  "group": {
+    "create": "+ Create group",
+    "join": "Join",
+    "join_title": "Join a group",
+    "create_title": "New group",
+    "invite_code": "Group invite code",
+    "no_groups": "You're not in any group.",
+    "no_groups_sub": "Create one or join with a code.",
+    "members": "members",
+    "invite_copied": "✓ Copied!",
+    "invite_button": "🔗 Invite friends"
+  },
+  "artists": {
+    "filter_all": "All",
+    "filter_unrated": "To rate",
+    "add_artist": "+ Artist",
+    "no_artists": "No artists found.",
+    "no_artists_sub": "Add the first artist with the + button",
+    "not_rated": "not rated",
+    "already_seen": "I've seen them live",
+    "save_rating": "Save rating",
+    "saving": "...",
+    "go_plan": "+ Plan",
+    "in_plan": "✓ Going",
+    "how_it_works": "ℹ️ how it works",
+    "close": "✕ close",
+    "your_vote": "Your rating",
+    "interest": "Interest (1-5)",
+    "priority": "Priority (1-5)",
+    "curiosity": "Curiosity (1-5)",
+    "interest_desc": "How much you like the artist overall. This has the highest weight in the score.",
+    "priority_desc": "How important it is to see them live — rarity, rare tours, unique moments.",
+    "curiosity_desc": "How much you want to discover them — artists you don't know well but want to explore.",
+    "seen_desc": "If you've already seen them, it slightly reduces the never-seen bonus in the score.",
+    "open_spotify": "▶ Open on Spotify",
+    "loading_spotify": "Loading..."
+  },
+  "progress": {
+    "rated": "artists rated"
+  },
+  "conflicts": {
+    "title": "Schedule conflicts",
+    "subtitle": "MUST SEE and HIGH artists with overlapping times",
+    "none": "No conflicts!",
+    "none_sub": "Your favourite artists don't overlap.",
+    "overlap": "min overlap",
+    "close": "Close"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "close": "Close",
+    "in_plan": "In plan",
+    "conflict": "Conflict"
+  },
+  "profile": {
+    "title": "Profile",
+    "change_password": "Change password",
+    "change_password_sub": "Receive a link via email",
+    "logout": "Log out"
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Start",
+    "step1_title": "Find your festival",
+    "step1_desc": "Browse festivals already on Stageside. The lineup is already loaded — nothing to do.",
+    "step1_highlight": "Primavera Sound 2026 already available",
+    "step2_title": "Create your group",
+    "step2_desc": "Every festival has private groups. Create yours and invite friends with a simple link.",
+    "step2_highlight": "Only your group sees your ratings",
+    "step3_title": "Rate and plan",
+    "step3_desc": "Rate artists together. The group score decides the MUST SEEs. Build your day plan and always know where to find each other.",
+    "step3_highlight": "Timeline, conflicts and plans in real time"
+  },
+  "not_found": {
+    "festival_title": "Festival not found",
+    "festival_desc": "This festival doesn't exist or is no longer available.",
+    "festival_cta": "Browse festivals",
+    "group_title": "Group not found",
+    "group_desc": "This group doesn't exist or you don't have access.",
+    "group_cta": "Back to festivals"
+  },
+  "forgot_password": {
+    "title": "Reset password",
+    "desc": "Enter your email and we'll send you a link to reset your password.",
+    "send": "Send reset link",
+    "sent_title": "Email sent!",
+    "sent_desc": "Check your inbox and click the link to reset your password.",
+    "back_login": "← Back to login"
+  },
+  "reset_password": {
+    "title": "New password",
+    "new_password": "new password",
+    "confirm_password": "confirm password",
+    "mismatch": "Passwords don't match.",
+    "too_short": "Password must be at least 6 characters.",
+    "update": "Update password",
+    "done_title": "Password updated!",
+    "done_desc": "You'll be redirected shortly..."
+  }
+}
