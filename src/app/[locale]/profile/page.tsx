@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import LogoutButton from '@/app/dashboard/LogoutButton'
+import LogoutButton from '@/components/LogoutButton'
 import Link from 'next/link'
 
 export default async function ProfilePage() {
